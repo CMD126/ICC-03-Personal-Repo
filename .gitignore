@@ -1,0 +1,46 @@
+# Ficheiros de sistema
+.DS_Store
+Thumbs.db
+
+# Ficheiros temporários e de swap
+*.tmp
+*.swp
+*.swo
+*.bak
+*~
+
+# Caches Python (caso uses scripts Python também)
+__pycache__/
+*.pyc
+*.pyo
+
+# Ambiente virtual (Python)
+venv/
+env/
+
+# Node.js (caso uses JavaScript)
+node_modules/
+npm-debug.log
+
+# Ficheiros ocultos de configuração de IDEs/editors
+.vscode/
+.idea/
+*.code-workspace
+
+# Ficheiros de ambiente (sensíveis)
+.env
+.env.*
+
+# Logs e relatórios
+*.log
+
+# Ficheiros de build, pacotes e executáveis
+*.out
+*.exe
+*.o
+*.a
+*.so
+
+# Pastas de backup ou exportações
+export/
+backups/
