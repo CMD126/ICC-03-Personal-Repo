@@ -1,13 +1,20 @@
-# ICC-03 Personal Repository
+# ICC-03 Cybersecurity Notes
 
-## Repository Structure
+## Quick Intro
 
-| Directory | Description |
-|-----------|-------------|
-| `/Exercises` | Contains various exercises completed during the training program. Each exercise focuses on different aspects of cybersecurity, including but not limited to, network security, cryptography, and ethical hacking. |
-| `/ImportNotes` | Includes important notes and documentation gathered throughout the course. These notes cover key concepts, techniques, and best practices in cybersecurity. |
-| `/Scripts` | Houses a collection of scripts written to automate tasks, demonstrate concepts, or solve specific problems encountered during the training. |
+As a beginner diving into cybersecurity through the ICC-03 program, I've put together this simple repo to track my learning. It's got exercises, notes, and scripts from the training—nothing fancy, just practical stuff to build skills in network security and ethical hacking. Sharing it humbly in case it helps others.
 
+## What's Inside
 
+| Folder         | What's There |
+|----------------|--------------|
+| `/Exercises`  | Hands-on practice. Learning from mistakes along the way. |
+| `/ImportNotes`| Only some notes |
+| `/Scripts`    | Simple tools. |
 
+## Getting Going
 
+Clone it: `git clone https://github.com/your-username/ICC-03.git`  
+Explore at your pace. Always test in a VM—safety first!
+
+Open to feedback or tweaks. Licensed under MIT. Let's learn together.
