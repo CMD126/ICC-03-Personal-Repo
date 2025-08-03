@@ -1,46 +1,109 @@
-# Ficheiros de sistema
-.DS_Store
-Thumbs.db
+.gitignore for ICC repository
 
-# Ficheiros temporários e de swap
-*.tmp
-*.swp
-*.swo
-*.bak
-*~
-
-# Caches Python (caso uses scripts Python também)
-__pycache__/
+#Purpose: Ignore temp files, builds, sensitive info (keys, env vars, databases, personal data), OS artifacts, IDE settings, and custom folders to prevent accidental commits.
+#Python bytecode and caches
+pycache/
+*.py[cod]
 *.pyc
 *.pyo
-
-# Ambiente virtual (Python)
+*.pyd
+#Virtual environments
 venv/
+.venv/
 env/
-
-# Node.js (caso uses JavaScript)
-node_modules/
-npm-debug.log
-
-# Ficheiros ocultos de configuração de IDEs/editors
+#Pipenv and Poetry
+Pipfile.lock
+poetry.lock
+#Sensitive files (API keys, passwords, env vars)
+.env
+.env.
+secrets/
+credentials/
+*.key
+*.pem
+*.crt
+*.cert
+*.pfx
+*.p12
+id_rsa
+id_dsa
+*.secret
+config.ini  
+settings.py  
+#Databases and local storage
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+*.dump
+migrations/
+#Logs and debug
+*.log
+debug/
+logs/
+#Temp and backup files
+*~
+*.tmp
+*.bak
+*.swp
+*.swo
+temp/
+.tmp/
+#OS-specific
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+*.lnk
+#IDE and editor settings
 .vscode/
 .idea/
+*.sublime-project
+*.sublime-workspace
 *.code-workspace
-
-# Ficheiros de ambiente (sensíveis)
-.env
-.env.*
-
-# Logs e relatórios
-*.log
-
-# Ficheiros de build, pacotes e executáveis
-*.out
-*.exe
-*.o
-*.a
-*.so
-
-# Pastas de backup ou exportações
-export/
-backups/
+*.iml
+*.ipr
+*.iws
+*.editorconfig  # 
+#Build and dist
+build/
+dist/
+*.egg-info/
+wheels/
+*.whl
+*.egg
+#Coverage and tests
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+coverage.xml
+Jupyter notebooks
+.ipynb_checkpoints/
+Node.js (if any)
+node_modules/
+npm-debug.log
+yarn-error.log
+Custom folders (personal/exercises)
+Exercises/
+Scripts/
+Documents/  
+Downloads/
+Media and large files
+*.mp4
+*.mp3
+*.zip
+*.tar.gz
+*.rar
+*.7z
+*.iso
+*.img
+#Other sensitive
+private/
+personal/
+confidential/
+api_keys/
+passwords.txt
+notes.txt  
+#What I intend to put: Comprehensive ignores to avoid committing code artifacts, sensitive data (e.g., .env, keys), OS junk, IDE configs, and custom dirs like Exercises/Scripts to keep repo clean and secure.
