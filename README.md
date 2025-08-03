@@ -14,7 +14,7 @@ As a beginner diving into cybersecurity through the ICC-03 program, I've put tog
 
 ## Getting Going
 
-Clone it: `git clone https://github.com/your-username/ICC-03.git`  
+Clone it: `git clone https://github.com/CMD126/ICC-03-Personal-Repo.git`  
 Explore at your pace. Always test in a VM—safety first!
 
 Open to feedback or tweaks. Licensed under MIT. Let's learn together.
