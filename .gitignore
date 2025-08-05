@@ -1,22 +1,26 @@
-.gitignore for ICC repository
+# .gitignore for ICC repository
 
-#Purpose: Ignore temp files, builds, sensitive info (keys, env vars, databases, personal data), OS artifacts, IDE settings, and custom folders to prevent accidental commits.
-#Python bytecode and caches
-pycache/
+# Purpose: Ignore temp files, builds, sensitive info (keys, env vars, databases, personal data), OS artifacts, IDE settings, and custom folders to prevent accidental commits.
+
+# Python bytecode and caches
+__pycache__/
 *.py[cod]
 *.pyc
 *.pyo
 *.pyd
-#Virtual environments
+
+# Virtual environments
 venv/
 .venv/
 env/
-#Pipenv and Poetry
+
+# Pipenv and Poetry
 Pipfile.lock
 poetry.lock
-#Sensitive files (API keys, passwords, env vars)
+
+# Sensitive files (API keys, passwords, env vars)
 .env
-.env.
+.env.*
 secrets/
 credentials/
 *.key
@@ -28,20 +32,23 @@ credentials/
 id_rsa
 id_dsa
 *.secret
-config.ini  
-settings.py  
-#Databases and local storage
+config.ini
+settings.py
+
+# Databases and local storage
 *.db
 *.sqlite
 *.sqlite3
 *.sql
 *.dump
 migrations/
-#Logs and debug
+
+# Logs and debug
 *.log
 debug/
 logs/
-#Temp and backup files
+
+# Temp and backup files
 *~
 *.tmp
 *.bak
@@ -49,14 +56,16 @@ logs/
 *.swo
 temp/
 .tmp/
-#OS-specific
+
+# OS-specific
 .DS_Store
 Thumbs.db
 ehthumbs.db
 desktop.ini
 $RECYCLE.BIN/
 *.lnk
-#IDE and editor settings
+
+# IDE and editor settings
 .vscode/
 .idea/
 *.sublime-project
@@ -65,45 +74,49 @@ $RECYCLE.BIN/
 *.iml
 *.ipr
 *.iws
-*.editorconfig  # 
-#Build and dist
+*.editorconfig
+
+# Build and dist
 build/
 dist/
 *.egg-info/
 wheels/
 *.whl
 *.egg
-#Coverage and tests
+
+# Coverage and tests
 .coverage
 htmlcov/
 .tox/
 .pytest_cache/
 coverage.xml
-Jupyter notebooks
+
+# Jupyter notebooks
 .ipynb_checkpoints/
-Node.js (if any)
+
+# Node.js
 node_modules/
 npm-debug.log
 yarn-error.log
-Custom folders (personal/exercises)
+
+# Personal/custom folders to ignore
 Exercises/
-Scripts/
-Documents/  
+Documents/
 Downloads/
-Media and large files
-*.mp4
-*.mp3
-*.zip
-*.tar.gz
-*.rar
-*.7z
-*.iso
-*.img
-#Other sensitive
+Media/
 private/
 personal/
 confidential/
 api_keys/
-passwords.txt
-notes.txt  
-#What I intend to put: Comprehensive ignores to avoid committing code artifacts, sensitive data (e.g., .env, keys), OS junk, IDE configs, and custom dirs like Exercises/Scripts to keep repo clean and secure.
+notes.txt
+
+# === Whitelist specific folders ===
+
+# Allow Scripts/
+!Scripts/
+!Scripts/**
+Scripts/Convlex/.venv/
+
+# Allow ImportNotes/
+!ImportNotes/
+!ImportNotes/**
