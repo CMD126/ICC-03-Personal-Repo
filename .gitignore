@@ -1,23 +1,19 @@
+cat << 'EOF' > .gitignore
 # .gitignore for ICC repository
-
 # Purpose: Ignore temp files, builds, sensitive info (keys, env vars, databases, personal data), OS artifacts, IDE settings, and custom folders to prevent accidental commits.
-
 # Python bytecode and caches
 __pycache__/
 *.py[cod]
 *.pyc
 *.pyo
 *.pyd
-
 # Virtual environments
 venv/
 .venv/
 env/
-
 # Pipenv and Poetry
 Pipfile.lock
 poetry.lock
-
 # Sensitive files (API keys, passwords, env vars)
 .env
 .env.*
@@ -34,7 +30,6 @@ id_dsa
 *.secret
 config.ini
 settings.py
-
 # Databases and local storage
 *.db
 *.sqlite
@@ -42,12 +37,10 @@ settings.py
 *.sql
 *.dump
 migrations/
-
 # Logs and debug
 *.log
 debug/
 logs/
-
 # Temp and backup files
 *~
 *.tmp
@@ -56,7 +49,6 @@ logs/
 *.swo
 temp/
 .tmp/
-
 # OS-specific
 .DS_Store
 Thumbs.db
@@ -64,7 +56,6 @@ ehthumbs.db
 desktop.ini
 $RECYCLE.BIN/
 *.lnk
-
 # IDE and editor settings
 .vscode/
 .idea/
@@ -75,7 +66,6 @@ $RECYCLE.BIN/
 *.ipr
 *.iws
 *.editorconfig
-
 # Build and dist
 build/
 dist/
@@ -83,22 +73,18 @@ dist/
 wheels/
 *.whl
 *.egg
-
 # Coverage and tests
 .coverage
 htmlcov/
 .tox/
 .pytest_cache/
 coverage.xml
-
 # Jupyter notebooks
 .ipynb_checkpoints/
-
 # Node.js
 node_modules/
 npm-debug.log
 yarn-error.log
-
 # Personal/custom folders to ignore
 Exercises/
 Documents/
@@ -109,14 +95,12 @@ personal/
 confidential/
 api_keys/
 notes.txt
-
 # === Whitelist specific folders ===
-
 # Allow Scripts/
 !Scripts/
 !Scripts/**
 Scripts/Convlex/.venv/
-
 # Allow ImportNotes/
 !ImportNotes/
 !ImportNotes/**
+EOF
