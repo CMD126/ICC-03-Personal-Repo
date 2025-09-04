@@ -32,6 +32,7 @@ SOFTWARE.
 # pypdf: For extracting text from PDFs
 import os
 import re
+import tempfile
 from urllib.parse import urlparse
 import requests
 from bs4 import BeautifulSoup
@@ -95,14 +96,13 @@ for link in links:
                 text = resp_txt.text
             elif is_pdf:
                 # Fallback: extract from PDF
-                temp_pdf = 'temp.pdf'
-                with open(temp_pdf, 'wb') as f:
-                    f.write(resp_pdf.content)
-                reader = PdfReader(temp_pdf)
-                text = ''
-                for page in reader.pages:
-                    text += page.extract_text() + '\n'
-                os.remove(temp_pdf)
+                with tempfile.NamedTemporaryFile(suffix=".pdf") as temp_f:
+                    temp_f.write(resp_pdf.content)
+                    temp_f.seek(0)
+                    reader = PdfReader(temp_f)
+                    text = ''
+                    for page in reader.pages:
+                        text += page.extract_text() + '\n'
         except Exception as e:
             text = f"Error: {e}"
             is_pdf = False
@@ -121,14 +121,13 @@ for link in links:
                 is_html = True
                 is_pdf = False
             elif 'application/pdf' in content_type:
-                temp_pdf = 'temp.pdf'
-                with open(temp_pdf, 'wb') as f:
-                    f.write(resp.content)
-                reader = PdfReader(temp_pdf)
-                text = ''
-                for page in reader.pages:
-                    text += page.extract_text() + '\n'
-                os.remove(temp_pdf)
+                with tempfile.NamedTemporaryFile(suffix=".pdf") as temp_f:
+                    temp_f.write(resp.content)
+                    temp_f.seek(0)
+                    reader = PdfReader(temp_f)
+                    text = ''
+                    for page in reader.pages:
+                        text += page.extract_text() + '\n'
                 is_html = False
                 is_pdf = True
             else:
