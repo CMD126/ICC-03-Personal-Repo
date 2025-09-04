@@ -21,15 +21,18 @@ The PowerShell script `network-tuning.ps1` applies low-level TCP/IP and network 
 
 The script:
 
-- Enables TCP Receive Window Auto-Tuning (`autotuninglevel=normal`)
-- Enables TCP Chimney Offload
-- Enables Receive Side Scaling (RSS)
-- Enables NetDMA (Direct Memory Access)
-- Enables ECN (Explicit Congestion Notification)
-- Disables TCP Heuristics
-- Sets MTU to `1500` on the specified network adapter
-- Clears the DNS resolver cache
-- Displays the current global TCP settings
+- **Auto-detects** the primary active network adapter.
+- Checks for **Administrator privileges** before running.
+- Provides **real-time feedback** as it applies each optimization.
+- Enables TCP Receive Window Auto-Tuning (`autotuninglevel=normal`).
+- Enables TCP Chimney Offload.
+- Enables Receive Side Scaling (RSS).
+- Enables NetDMA (Direct Memory Access).
+- Enables ECN (Explicit Congestion Notification).
+- Disables TCP Heuristics.
+- Sets the MTU to `1500` on the detected network adapter.
+- Clears the DNS resolver cache.
+- Displays the final global TCP settings.
 
 ### Requirements
 
@@ -43,8 +46,7 @@ Run in an elevated PowerShell terminal:
 
 .\network-tuning.ps1
 
-
-> You can edit the `$adapter` variable in the script to match your active network interface (e.g., "Wi-Fi", "Ethernet").
+> The script will automatically detect your primary active network adapter.
 
 ### Reverting Changes
 
