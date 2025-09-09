@@ -104,3 +104,4 @@ Scripts/Convlex/.venv/
 !ImportNotes/
 !ImportNotes/**
 EOF
+*.swp
