@@ -78,6 +78,8 @@ for link in links:
     default_dir = get_dir_name(link)
     # Allow rename: Ask for custom directory name, default to URL-based
     custom_dir = input(f"Enter custom dir name for {link} (default: {default_dir}): ").strip() or default_dir
+    # Sanitize to prevent path traversal
+    custom_dir = os.path.basename(custom_dir)
     doc_id = get_google_doc_id(link)
     if doc_id:
         # Handle Google Doc
