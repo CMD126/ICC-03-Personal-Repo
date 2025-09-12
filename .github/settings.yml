@@ -1,0 +1,46 @@
+# This file is managed by the repository-settings app.
+# See https://github.com/repository-settings/app for more information.
+#
+# Note: This file will only take effect if the repository-settings app is installed
+# on this repository.
+
+# Repository-wide settings
+repository:
+  # The user wants to allow ONLY squash merging.
+  allow_squash_merge: true
+  allow_merge_commit: false
+  allow_rebase_merge: false
+  # The user wants to automatically delete head branches after merge.
+  delete_branch_on_merge: true
+
+# Branch protection rules
+branches:
+  - name: main
+    protection:
+      # Require a pull request before merging.
+      required_pull_request_reviews:
+        # Require 1 approving review.
+        required_approving_review_count: 1
+        # Dismiss stale reviews when new commits are pushed.
+        dismiss_stale_reviews: true
+        # Require review from Code Owners.
+        require_code_owner_reviews: true
+        # No dismissal restrictions.
+        dismissal_restrictions:
+          users: []
+          teams: []
+      # Require status checks to pass before merging.
+      required_status_checks:
+        # Require branches to be up to date before merging.
+        strict: true
+        # List of required status checks. An empty list means all status checks are required.
+        contexts: []
+      # Enforce all configured restrictions for administrators.
+      enforce_admins: true
+      # Require linear history.
+      required_linear_history: true
+      # No restrictions on who can push to this branch.
+      restrictions:
+        apps: []
+        users: []
+        teams: []
