@@ -10,10 +10,9 @@ The repository is organized into the following directories:
 
 | Directory        | Description                                                                                          |
 |------------------|------------------------------------------------------------------------------------------------------|
-| `/Exercises`     | Contains hands-on exercises and tasks related to the course material.                                |
-| `/ImportNotes`   | A collection of personal study notes on various cybersecurity topics, including tools like Wireshark. |
+| `/exercises`     | Contains hands-on exercises and tasks related to the course material.                                |
+| `/notes`         | A collection of personal study notes on various cybersecurity topics, including tools like Wireshark. |
 | `/Scripts`       | A collection of custom scripts for various purposes. See the [Scripts](#scripts) section for details. |
-| `/tests`         | Contains tests for the scripts in the `/Scripts` directory.                                          |
 
 ## Scripts
 
