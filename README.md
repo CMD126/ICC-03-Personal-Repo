@@ -14,14 +14,6 @@ Here, you will find tools and resources to support your learning in network secu
 
 ## Tools
 
-### [ConvLex](./Scripts/Convlex/)
-
-**ConvLex** is a Python script designed to streamline data collection by converting web documents—including HTML, PDF, and Google Docs—into plain text and PDF formats. It is a valuable tool for anyone needing to quickly process and analyze online content.
-
-### [ENETUNING](./Scripts/ENETUNING/)
-
-**ENETUNING** is a powerful PowerShell script for optimizing network performance on Windows systems. It applies a series of low-level TCP/IP and network interface optimizations to improve speed, stabilize connections, and reduce latency, making it ideal for virtualized environments and bandwidth-heavy tasks.
-
 ### [Syscript](./Scripts/syscript/)
 
 **Syscript** is a comprehensive, menu-driven shell script that simplifies system administration on Ubuntu and other Debian-based distributions. It provides an interactive toolkit for performing system updates, managing packages, monitoring resources, and retrieving detailed system information.
