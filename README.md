@@ -18,12 +18,22 @@ Here, you will find tools and resources to support your learning in network secu
 
 **Syscript** is a comprehensive, menu-driven shell script that simplifies system administration on Ubuntu and other Debian-based distributions. It provides an interactive toolkit for performing system updates, managing packages, monitoring resources, and retrieving detailed system information.
 
+## [NMATRIX](./Scripts/NMATRIX/)
+
+**NMATRIX** is a shell script that provides a user-friendly, menu-driven interface for the powerful `nmap` network scanner. It enhances the experience with a "digital rain" animation inspired by The Matrix, making network scanning a bit more fun.
+
+### [Network-Tool](./Scripts/Network-Tool/)
+
+The **Network Diagnostic Tool** is a comprehensive, menu-driven Bash utility designed to simplify common network diagnostics. It provides a single, easy-to-use interface for various command-line networking tools, making it ideal for quick network troubleshooting.
+
+##
+
 ## Repository Structure
 
 | Directory        | Description                                                                                          |
 |------------------|------------------------------------------------------------------------------------------------------|
-| `/exercises`     | Contains hands-on exercises and tasks related to the course material.                                |
-| `/notes`         | A collection of personal study notes on various cybersecurity topics, including tools like Wireshark. |
+| `/Exercises`     | Contains hands-on exercises and tasks related to the course material.                                |
+| `/Notes`         | A collection of personal study notes on various cybersecurity topics, including tools like Wireshark. |
 | `/Scripts`       | A collection of custom scripts for various purposes. See the [Tools](#tools) section for details. |
 
 ## Getting Started
