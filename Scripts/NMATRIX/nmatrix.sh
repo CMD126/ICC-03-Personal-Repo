@@ -1,6 +1,4 @@
 #!/bin/bash
-# Shebang to specify this is a Bash script
-#!/bin/bash
 # Shebang to specify Bash script
 
 # Function for enhanced Matrix-style animation
