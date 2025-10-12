@@ -1,39 +1,21 @@
-# ABDNS.py
+# ABDNS: DNS Performance and Configuration Tool
 
-`ABDNS.py` is a Python script designed for managing and automating DNS-related tasks. It provides functionalities such as querying DNS records, updating entries, and monitoring DNS changes. The script is modular and can be integrated into larger network automation workflows.
+ABDNS is a Python script that helps you find the fastest DNS server from a curated list of popular public DNS providers and automatically apply the settings to your system. It is designed to work on Linux, macOS, and Windows.
 
 ## Features
 
-- Query DNS records (A, AAAA, CNAME, MX, etc.)
-- Update and manage DNS entries
-- Monitor DNS changes and notify users
-- Command-line interface for ease of use
-- Supports running with elevated privileges for operations requiring administrative access
+- **DNS Benchmark**: Pings a list of public DNS servers to measure their response times.
+- **Automated Configuration**: Applies the selected DNS server to your system's network settings.
+- **Cross-Platform**: Supports Linux, macOS, and Windows.
 
 ## Usage
 
-Some DNS management operations may require administrative privileges. To run the script with elevated permissions, use `sudo`:
+To use ABDNS, run the script from your terminal:
 
 ```bash
-sudo python ABDNS.py [options]
+python3 abdns.py
 ```
 
-### Example
+The script will first analyze the DNS servers and then prompt you to choose one to apply.
 
-```bash
-sudo python ABDNS.py --query example.com
-```
-
-## Requirements
-
-- Python 3.x
-- `dnspython` library (install with `pip install dnspython`)
-
-## Configuration
-
-Edit the configuration section in `ABDNS.py` to set DNS server details and notification preferences.
-
-## License
-
-This project is licensed under the MIT License.
-
+**Note**: You may need to run the script with administrative privileges (e.g., using `sudo`) to apply the DNS settings.
