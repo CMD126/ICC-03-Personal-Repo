@@ -23,6 +23,7 @@ This repository includes a variety of custom-built scripts to automate and simpl
 | [Network-Tool](./Scripts/Network-Tool/)   | A comprehensive, menu-driven Bash utility designed to simplify common network diagnostics and troubleshooting.                               |
 | [ABDNS](./Scripts/ABDNS/)                 | A Python script to benchmark and apply the fastest public DNS server for your system. It supports Linux, macOS, and Windows.               |
 | [Basic Py Script](./Scripts/Basic_py_script/) | A simple Python script that demonstrates how to execute shell commands (`ls`, `whoami`) and print their output to the console.             |
+| [lexcrypt.py](./Exercises/Lexcript/)      | A Python script for encryption/decryption tasks, located in the Exercises directory. |
 
 ## Repository Structure
 
@@ -38,10 +39,3 @@ To get a local copy of this repository, clone it using the following command:
 
 ```bash
 git clone https://github.com/CMD126/ICC-03-Personal-Repo.git
-```
-
-Feel free to explore the repository at your own pace. When running any scripts, especially those that make system changes, it is recommended to do so in a virtual machine or a controlled environment.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE.md](./LICENSE.md) file for details.
