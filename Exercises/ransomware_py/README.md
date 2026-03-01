@@ -1,16 +1,16 @@
 # ransomware_py
 
-Educational ransomware simulation written in Python.  
+Educational ransomware simulation written in Python.
 This project is for learning and cybersecurity training only, demonstrating file discovery, encryption, and UI behaviors in a controlled environment.
 
 ---
 
 ## Disclaimer
 
-**Do not run this script on a real machine.  
+**Do not run this script on a real machine.
 Use only inside a virtual machine or isolated test environment.**
 
-The script modifies files and can change system wallpaper.  
+The script modifies files and can change system wallpaper.
 It is intended solely for educational, defensive, and research purposes.
 
 ---
@@ -19,10 +19,10 @@ It is intended solely for educational, defensive, and research purposes.
 
 This project simulates the core behavior of a basic ransomware:
 
-- Scanning directories  
-- Encrypting individual files or entire folders  
-- Encrypting/decrypting messages  
-- Generating a “README” wallpaper  
+- Scanning directories
+- Encrypting individual files or entire folders
+- Encrypting/decrypting messages
+- Generating a "README" wallpaper
 - Showing a fullscreen popup to simulate a lockscreen
 
 The goal is to help students understand ransomware mechanics, cryptography usage, and basic GUI manipulation, improving defensive and analytical skills.
@@ -50,3 +50,28 @@ Install required Python libraries via pip:
 
 ```bash
 pip install cryptography pillow
+```
+
+## Usage
+
+> **Run inside a VM only.**
+
+```bash
+python ransom_win_be.py
+```
+
+A key file (`key.key`) is generated and saved to the Desktop on first run. Keep it — it is required for decryption.
+
+---
+
+## Screenshots
+
+| Encrypt & Decrypt Message | Encrypt File | Decrypt File |
+|:---:|:---:|:---:|
+| ![Encrypt and decrypt](ss/encrypt%20and%20desencript.png) | ![Encrypt file](ss/encript.png) | ![Decrypt file](ss/decryptfile.png) |
+
+| Encrypt Folder | Decrypt Folder | Popup & Wallpaper |
+|:---:|:---:|:---:|
+| ![Encrypt folder](ss/foldercript.png) | ![Decrypt folder](ss/folderdde.png) | ![Popup](ss/pop.png) |
+
+![Wallpaper](ss/wallpaper.png)

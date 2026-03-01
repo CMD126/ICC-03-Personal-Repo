@@ -1,52 +1,55 @@
-# NMATRIX - Matrix Nmap Scanner
+# NMATRIX — Matrix-style Nmap Scanner v2.0
 
-NMATRIX is a shell script that provides a user-friendly, menu-driven interface for the powerful `nmap` network scanner. It enhances the experience with a "digital rain" animation inspired by The Matrix, making network scanning a bit more fun.
+A bash menu-driven frontend for `nmap` with a Matrix digital-rain intro animation.
 
 ## Features
 
-*   **Interactive Menu:** An easy-to-use menu to select from various scan types.
-*   **Matrix Animation:** A cool "digital rain" animation that runs before the menu is displayed.
-*   **Multiple Scan Options:**
-    *   Quick TCP Scan (Top 100 ports)
-    *   Detailed TCP Scan (All ports with service version detection)
-    *   UDP Scan (Top 100 ports)
-    *   Ping Scan (to discover live hosts on a network)
-*   **Input Validation:** Basic checks to ensure a host or network is provided.
-*   **Prerequisite Check:** Verifies if `nmap` is installed before running.
+| # | Scan | nmap flags | Notes |
+|---|------|-----------|-------|
+| 1 | **Quick TCP** | `-sS -T4 --top-ports 100` | Top 100 ports, fast |
+| 2 | **Full TCP** | `-sS -p- -sV -T4` | All 65535 ports + version detection |
+| 3 | **Service & Script** | `-sC -sV -T4` | Default NSE scripts + version; full script output shown |
+| 4 | **OS Detection** | `-O -T4` | Guesses operating system; requires root |
+| 5 | **UDP Scan** | `-sU --top-ports 100 -T4` | Top 100 UDP ports; slower by nature |
+| 6 | **Ping Sweep** | `-sn` | Discovers live hosts on a subnet; no port scan |
+| 7 | **Vulnerability Scan** | `--script vuln -T4` | Runs NSE vuln scripts; only use on authorised targets |
+| 8 | **Custom Scan** | user-defined | Enter any nmap flags manually |
+| 9 | **View Log** | — | Last 30 entries from `~/.local/share/nmatrix/scans.log` |
 
-## Prerequisites
+## What changed in v2.0
 
-Before running NMATRIX, you need to have `nmap` installed on your system. You can install it on Debian-based systems (like Ubuntu) using the following command:
+- **Animation fixed** — heads now advance *once per frame* (not inside the row loop), giving correct cascading rain. Variable column speeds (1–3 frame intervals) and a larger character set (`!#$%&*+/<=>?@[\]^{}|~0123456789ABCDEFabcdef`). Bright-green head, normal-green trail, dim-green fade at tail end.
+- **Animation runs once at startup** — no longer repeats before every menu.
+- **`sudo` only when not root** — if you run as root, `sudo` is skipped.
+- **Portable grep** — removed `-P` (Perl regex) flag; uses `-E` (extended) which works on GNU/BSD/macOS.
+- **Proper output table** — port, state, service, and full version string displayed in aligned columns with colour.
+- **Save results** — after every scan you can save the raw nmap output to a timestamped `.txt` file.
+- **Logging** — every scan is timestamped and appended to `~/.local/share/nmatrix/scans.log`.
+- **4 new scan types** — Service+Script, OS Detection, Vulnerability Scan, Custom Scan.
+- **Cursor always restored** — `trap` on EXIT ensures the terminal cursor is shown even if the script crashes.
 
-```bash
-sudo apt-get update
-sudo apt-get install nmap
-```
+## Requirements
+
+- `bash` 4+
+- `nmap` — `sudo apt install nmap`
 
 ## Usage
 
-1.  **Navigate to the script directory:**
-    ```bash
-    cd Scripts/NMATRIX
-    ```
+```bash
+chmod +x nmatrix.sh
+./nmatrix.sh
 
-2.  **Make the script executable:**
-    ```bash
-    chmod +x nmatrix.sh
-    ```
+# Some scans (SYN, OS detection) need root:
+sudo ./nmatrix.sh
+```
 
-3.  **Run the script:**
-    ```bash
-    ./nmatrix.sh
-    ```
-    *Note: The script uses `sudo` for some `nmap` commands, so you may be prompted for your password.*
+## Notes
 
-## Scan Options
+- **Legal**: Only scan hosts and networks you own or have explicit written permission to test.
+- Scan results are saved in the current working directory as `nmap_<type>_<target>_<timestamp>.txt`.
+- The log file is at `~/.local/share/nmatrix/scans.log`.
 
-The script provides the following scan options:
+---
 
-1.  **Quick TCP Scan:** Performs a fast SYN scan (`-sS`) on the top 100 most common TCP ports.
-2.  **Detailed TCP Scan:** A more thorough SYN scan (`-sS`) that checks all 65,535 TCP ports and attempts to identify the version of the services running (`-sV`).
-3.  **UDP Scan:** Scans the top 100 most common UDP ports (`-sU`). This type of scan is generally slower than TCP scans.
-4.  **Ping Scan:** Discovers which hosts are active on a given network (`-sn`) without performing any port scans.
-5.  **Exit:** Exits the NMATRIX script.
+Created by @lexlucas
+**Disclaimer**: Use responsibly. Unauthorised port scanning may be illegal in your jurisdiction.
