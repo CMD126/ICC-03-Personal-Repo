@@ -1,78 +1,94 @@
-# Syscript: Ubuntu System Administration Toolkit
+# Syscript — Ubuntu Admin Toolkit v2.0
 
-**Syscript** is a powerful, menu-driven shell script designed to simplify common system administration tasks on Ubuntu and other Debian-based distributions. It provides a comprehensive set of tools for system maintenance, package management, and information retrieval, all accessible through an easy-to-use interactive menu.Syscript is a collection of shell scripts for automating common system administration tasks on Ubuntu. The main script, `act.sh`, provides an interactive menu for performing updates, cleaning, package management, system info, and more.
+A menu-driven bash script for common Ubuntu/Debian system administration tasks. Grouped into categories with colour output and a live header showing hostname, uptime, and load averages.
 
-## Overview
+## Menu Reference
 
-The core of Syscript is `act.sh`, a Bash script that automates a wide range of administrative functions. Whether you need to update your system, manage packages, monitor resource usage, or retrieve detailed system information, Syscript streamlines the process and makes it more efficient.
+### Package Management
+| # | Option | Command(s) |
+|---|--------|-----------|
+| 1 | Update & full-upgrade | `apt update && apt full-upgrade -y` |
+| 2 | Autoremove | `apt autoremove -y` |
+| 3 | Clean cache | `apt clean && apt autoclean` |
+| 4 | List upgradable | `apt list --upgradable` |
+| 5 | List installed | `dpkg --get-selections` (piped to `less`) |
+| 6 | Search repository | `apt-cache search` |
+| 7 | Install package | `apt install` |
+| 8 | Remove package | `apt remove` — asks confirmation |
+| 9 | **Purge package** *(new)* | `apt purge` — removes config too, asks confirmation |
 
-## Features
+### System Information
+| # | Option | What it shows |
+|---|--------|--------------|
+| 10 | Disk usage | `df -h` filtered to real devices |
+| 11 | Memory & swap | `free -h` + `/proc/meminfo` summary |
+| 12 | **CPU info & load** *(new)* | Model, core count, cache, load average (1/5/15m), uptime |
+| 13 | System info | `uname -a` + `lsb_release -a` / `/etc/os-release` |
+| 14 | Running processes | Top 20 by CPU + top 10 by memory (`ps aux --sort`) |
+| 15 | Hardware summary | `lshw -short` with fallback to `/proc/cpuinfo`, `lsblk`, `lspci` |
 
-- **System Maintenance**: Keep your system up-to-date, clean, and optimized with options for updating, upgrading, and removing unnecessary packages.
-- **Package Management**: Easily list, search, install, and remove packages without needing to remember complex `apt` commands.
-- **Resource Monitoring**: Get a quick overview of disk and memory usage in a human-readable format.
-- **In-Depth System Information**: Access detailed information about your system, hardware, kernel, network, and running processes.
-- **User-Friendly Interface**: An interactive menu guides you through the available options, making it accessible for both new and experienced users.
+### Network
+| # | Option | What it shows |
+|---|--------|--------------|
+| 16 | Network interfaces | `ip -brief addr` + detailed `ip addr` |
+| 17 | Open ports & listeners | `ss -tuln` |
+| 18 | **Active connections** *(new)* | `ss -tupn state established` |
 
-## Getting Started
+### System Management
+| # | Option | Notes |
+|---|--------|-------|
+| 19 | System logs | Last 50 entries, `--no-pager` — no pager trap |
+| 20 | **Failed services** *(new)* | `systemctl --failed` with pass/fail colour |
+| 21 | **Service control** *(new)* | Status / Start / Stop / Restart / Enable / Disable for any service |
+| 22 | **UFW firewall status** *(new)* | `ufw status verbose` |
+| 23 | **Clear old journals** *(new)* | `journalctl --vacuum-time=Nd` — asks how many days to keep |
 
-Follow these simple steps to get Syscript up and running on your system.
+### User & Environment
+| # | Option | What it shows |
+|---|--------|--------------|
+| 24 | User info | `whoami` + `id` + groups + shell + home + last logins |
+| 25 | Scheduled tasks | `crontab -l` (skips comments) + `systemctl list-timers` |
+| 26 | Environment variables | `printenv \| sort` piped to `less` |
+| 27 | Bash history | **Reads `~/.bash_history` directly** — works correctly in a script |
 
-### Prerequisites
+### Extra
+| # | Option | Notes |
+|---|--------|-------|
+| 28 | **System health overview** *(new)* | Dashboard: uptime, load, memory bar, disk bars per device, failed services, pending updates |
 
-- An Ubuntu or Debian-based Linux distribution.
-- The Bash (Bourne-Again SHell).
-- `sudo` privileges for administrative actions.
+## What changed in v2.0
 
-### Installation and Usage
+- **`read -s` removed** — was silent with no prompt; replaced with `read -rp "Enter choice: "` so input is visible
+- **Portuguese strings removed** — `"Erro ao remover pacotes."` and `"Pressione Enter para continuar..."` replaced with English
+- **`history` fixed** — bash builtin returns nothing in a subshell; now reads `~/.bash_history` (or `$HISTFILE`)
+- **`journalctl -xe` replaced** — was opening an endless pager; now uses `journalctl -n 50 --no-pager`
+- **`ps aux` replaced** — was dumping hundreds of lines; now shows top 20 by CPU and top 10 by memory
+- **Option 16 expanded** — was just `whoami`; now shows `id`, groups, shell, home directory, and last logins
+- **`lshw` guarded** — checks if installed before calling; falls back to `/proc/cpuinfo`, `lsblk`, `lspci`
+- **Confirmation prompts** — Remove and Purge ask before executing destructive operations
+- **Color-coded UI** — section headers, prompts, success/warning/error messages all colour-coded
+- **Functions** — each option is its own function; no more deeply nested case statements
+- **Empty input ignored** — pressing Enter at the menu without a choice no longer shows "Invalid option"
+- **7 new menu options** added (9, 12, 18, 20, 21, 22, 23, 28)
 
-1.  **Navigate to the script directory**:
-    ```bash
-    cd Scripts/syscript
-    ```
+## Requirements
 
-2.  **Make the script executable**:
-    ```bash
-    chmod +x act.sh
-    ```
+- Ubuntu / Debian-based Linux
+- `bash` 4+, `sudo` privileges for admin operations
 
-3.  **Run the script**:
-    ```bash
-    ./act.sh
-    ```
+**Optional tools** (gracefully skipped if missing):
+- `lshw` — hardware summary (falls back to `/proc/cpuinfo`, `lsblk`)
+- `lspci` — PCI device list
+- `ufw` — firewall status
+- `lsb_release` — distro info (falls back to `/etc/os-release`)
 
-You may be prompted for your password for actions that require `sudo` privileges.
+## Usage
 
-## Menu Options Explained
+```bash
+chmod +x act.sh
+./act.sh
+```
 
-Here is a detailed breakdown of each option available in the `act.sh` menu:
+---
 
-| Option | Description                                                                                                                              |
-| :----- | :--------------------------------------------------------------------------------------------------------------------------------------- |
-| `1`    | **Update && full-upgrade**: Updates the package list and upgrades all installed packages to their latest versions.                     |
-| `2`    | **Autoremove**: Removes packages that were automatically installed to satisfy dependencies for other packages and are no longer needed.  |
-| `3`    | **Clean**: Clears out the local repository of retrieved package files.                                                                   |
-| `4`    | **List upgradable packages**: Shows a list of all packages that have new versions available.                                            |
-| `5`    | **List installed packages**: Displays all packages currently installed on the system.                                                   |
-| `6`    | **Search package**: Searches for a package in the repositories. You will be prompted to enter the package name.                         |
-| `7`    | **Install package**: Installs a new package. You will be prompted to enter the package name.                                            |
-| `8`    | **Remove package**: Uninstalls a package from the system. You will be prompted to enter the package name.                               |
-| `9`    | **Show disk usage**: Displays file system disk space usage in a human-readable format (`df -h`).                                       |
-| `10`   | **Show memory usage**: Shows the amount of free and used memory in the system (`free -h`).                                                |
-| `11`   | **Show system information**: Displays system information, including kernel name, version, and more (`uname -a`). |
-| `12`   | **Show running processes**: Lists all currently running processes (`ps aux`).                                                           |
-| `13`   | **Show network information**: Shows information about network interfaces (`ip a`).                                                      |
-| `14`   | **Show open ports**: Lists all listening TCP and UDP ports (`ss -tuln`).                                                                |
-| `15`   | **Show system logs**: Displays the latest entries from the system journal (`journalctl -xe`).                                             |
-| `16`   | **Show user information**: Shows the current user's username (`whoami`).                                                                  |
-| `17`   | **Show scheduled tasks**: Displays the current user's cron jobs (`crontab -l`).                                                         |
-| `18`   | **Show hardware information**: Provides a summary of the system's hardware (`lshw -short`).                                             |
-| `19`   | **Show kernel information**: Displays the kernel release version (`uname -r`).                                                          |
-| `20`   | **Show environment variables**: Prints the current environment variables (`printenv`).                                                    |
-| `21`   | **Show bash history**: Shows the command history for the current session (`history`).                                                   |
-| `q`    | **Quit**: Exits the script.                                                                                                             |
-
-## Contributing
-
-Contributions are welcome! If you have suggestions for improvements or new features, please feel free to open an issue or submit a pull request.
-
+Created by @lexlucas

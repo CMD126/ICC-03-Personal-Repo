@@ -13,12 +13,12 @@ This repository includes a variety of custom-built scripts to automate and simpl
 
 | Tool | Description |
 | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| [Syscript](./Scripts/syscript/) | A menu-driven shell script that simplifies system administration on Debian-based systems, including package management and resource monitoring. |
-| [NMATRIX](./Scripts/NMATRIX/) | A user-friendly, menu-driven interface for the `nmap` network scanner, complete with a "digital rain" animation. |
-| [Network-Tool](./Scripts/Network-Tool/) | A comprehensive, menu-driven Bash utility designed to simplify common network diagnostics and troubleshooting. |
-| [ABDNS](./Scripts/ABDNS/) | A Python script to benchmark and apply the fastest public DNS server for your system. It supports Linux, macOS, and Windows. |
+| [Syscript](./Scripts/syscript/) | **v2.0** — A menu-driven bash toolkit for Ubuntu/Debian administration. Covers package management, system info, networking, service control, firewall status, and a live system health dashboard. |
+| [NMATRIX](./Scripts/NMATRIX/) | **v2.0** — A Matrix-style, menu-driven frontend for `nmap` with 8 scan types (Quick/Full TCP, Service+Script, OS Detection, UDP, Ping Sweep, Vulnerability, Custom), scan logging, and save-to-file support. |
+| [Network-Tool](./Scripts/Network-Tool/) | **v3.0** — A comprehensive bash network diagnostic utility with 14 options including a latency ASCII graph, SSL certificate checker, WiFi diagnostics, real-time bandwidth monitor, and geolocation lookup. |
+| [ABDNS](./Scripts/ABDNS/) | A Python script that benchmarks 9 public DNS providers using real UDP queries, reports packet loss, and applies the fastest primary + secondary DNS on Linux, macOS, or Windows. |
 | [Basic Py Script](./Scripts/Basic_py_script/) | A simple Python script that demonstrates how to execute shell commands (`ls`, `whoami`) and print their output to the console. |
-| [lexcrypt.py](./Exercises/Lexcript/) | A Python script for encryption/decryption tasks, located in the Exercises directory. |
+| [LEXCRYPT](./Exercises/Lexcript/) | A Python GUI app (Tkinter) for file and message encryption/decryption. Uses PBKDF2-SHA256 key derivation, Fernet (AES-128-CBC) encryption, and chunked I/O for large files. |
 | [Ransomware Simulator](./Exercises/ransomware_py/) | **Educational only** – A Python-based simulation demonstrating ransomware encryption/decryption using password-derived keys and Fernet (AES). Includes full recovery. |
 
 ## Repository Structure
@@ -32,3 +32,7 @@ This repository includes a variety of custom-built scripts to automate and simpl
 To get a local copy of this repository, clone it using the following command:
 ```bash
 git clone https://github.com/CMD126/ICC-03-Personal-Repo.git
+```
+
+## License
+This project is licensed under the MIT License — see the [LICENSE](./LICENSE) file for details.
