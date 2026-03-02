@@ -1,6 +1,9 @@
 #!/bin/bash
-# Network Diagnostic Tool — Version 3.0
+# =============================================================================
+# Net Diagnostic Tool — Version 4.0
 # Author: @lexlucas
+# A comprehensive network diagnostic, analysis, and security utility.
+# =============================================================================
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -17,6 +20,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
+MAGENTA='\033[0;35m'
 BOLD='\033[1m'
 NC='\033[0m'
 
@@ -27,7 +31,6 @@ NC='\033[0m'
 setup_environment() {
     mkdir -p "$TEMP_DIR"
     mkdir -p "$(dirname "$LOG_FILE")"
-    # Only clean up temp files on exit — no noisy message
     trap 'rm -rf "$TEMP_DIR"' EXIT
 }
 
@@ -38,7 +41,6 @@ log_action() {
     echo -e "${BLUE}[LOG]${NC} $1"
 }
 
-# Print error and return 1 — does NOT pause or exit the program
 error_exit() {
     echo -e "${RED}Error: $1${NC}" >&2
     log_action "ERROR: $1"
@@ -56,15 +58,18 @@ check_dependencies() {
     fi
 }
 
+section() {
+    echo -e "\n${GREEN}=== $1 ===${NC}\n"
+}
+
 # ---------------------------------------------------------------------------
 # 1. Network Interfaces
 # ---------------------------------------------------------------------------
 
 show_interfaces() {
-    echo -e "\n${GREEN}=== Network Interfaces ===${NC}\n"
+    section "Network Interfaces"
 
     echo -e "${YELLOW}Interfaces & MAC addresses:${NC}"
-    # Use 'ip addr show' without -color to avoid ANSI codes breaking awk
     ip addr show | awk '
         /^[0-9]+:/ {
             iface = $2; gsub(/:/, "", iface)
@@ -79,7 +84,7 @@ show_interfaces() {
         printf "  %-6s %-22s %s\n", $1, $2, $NF
     }'
 
-    echo -e "\n${YELLOW}Interface Statistics (from /proc/net/dev):${NC}"
+    echo -e "\n${YELLOW}Interface Statistics:${NC}"
     if [[ -f /proc/net/dev ]]; then
         awk 'NR>2 {
             gsub(/:/, "", $1)
@@ -111,7 +116,7 @@ ping_host() {
 }
 
 # ---------------------------------------------------------------------------
-# 3. Latency Graph (NEW)
+# 3. Latency Graph
 # ---------------------------------------------------------------------------
 
 latency_graph() {
@@ -145,6 +150,7 @@ latency_graph() {
 
     local bar_width=40
     echo -e "${CYAN}=== Latency Graph (ms) ===${NC}"
+    echo -e "  ${GREEN}■${NC} good (<100ms)  ${YELLOW}■${NC} moderate (<200ms)  ${RED}■${NC} high (200ms+)\n"
     echo -e "  Scale: min=${min_ms}ms  max=${max_ms}ms\n"
 
     for i in "${!rtts[@]}"; do
@@ -167,7 +173,6 @@ latency_graph() {
         fi
     done
 
-    # Summary
     local valid=() sum=0 lost=0
     for rtt in "${rtts[@]}"; do
         if [[ "$rtt" == "T" ]]; then
@@ -190,7 +195,46 @@ latency_graph() {
 }
 
 # ---------------------------------------------------------------------------
-# 4. Port Scan
+# 4. Traceroute
+# ---------------------------------------------------------------------------
+
+trace_route() {
+    read -rp "Enter host for traceroute (default: 8.8.8.8): " host
+    host=${host:-8.8.8.8}
+
+    log_action "Traceroute to $host"
+    echo -e "\n${YELLOW}Traceroute to $host (max 30 hops):${NC}"
+
+    if command -v traceroute >/dev/null 2>&1; then
+        traceroute -m 30 -w 2 -q 1 "$host" 2>/dev/null \
+            || error_exit "traceroute to $host failed"
+    elif command -v tracepath >/dev/null 2>&1; then
+        tracepath "$host" 2>/dev/null \
+            || error_exit "tracepath to $host failed"
+    else
+        error_exit "No traceroute tool. Install: sudo apt install traceroute"
+    fi
+}
+
+# ---------------------------------------------------------------------------
+# 5. Routing Table
+# ---------------------------------------------------------------------------
+
+show_routing() {
+    section "Routing Table"
+
+    echo -e "${YELLOW}Default Gateway:${NC}"
+    ip route show default 2>/dev/null | sed 's/^/  /'
+
+    echo -e "\n${YELLOW}All Routes:${NC}"
+    ip route show | sed 's/^/  /'
+
+    echo -e "\n${YELLOW}ARP / Neighbor Table:${NC}"
+    ip neigh show | head -20 | sed 's/^/  /'
+}
+
+# ---------------------------------------------------------------------------
+# 6. Port Scan (Nmap)
 # ---------------------------------------------------------------------------
 
 port_scan() {
@@ -230,46 +274,102 @@ port_scan() {
 }
 
 # ---------------------------------------------------------------------------
-# 5. Routing Table
+# 7. Listening Services (local) — NEW
 # ---------------------------------------------------------------------------
 
-show_routing() {
-    echo -e "\n${GREEN}=== Routing Table ===${NC}\n"
+listening_services() {
+    section "Listening Services (Local)"
+    log_action "Listing local listening services"
 
-    echo -e "${YELLOW}Default Gateway:${NC}"
-    ip route show default 2>/dev/null | sed 's/^/  /'
-
-    echo -e "\n${YELLOW}All Routes:${NC}"
-    ip route show | sed 's/^/  /'
-
-    echo -e "\n${YELLOW}ARP / Neighbor Table:${NC}"
-    ip neigh show | head -20 | sed 's/^/  /'
-}
-
-# ---------------------------------------------------------------------------
-# 6. Traceroute
-# ---------------------------------------------------------------------------
-
-trace_route() {
-    read -rp "Enter host for traceroute (default: 8.8.8.8): " host
-    host=${host:-8.8.8.8}
-
-    log_action "Traceroute to $host"
-    echo -e "\n${YELLOW}Traceroute to $host (max 30 hops):${NC}"
-
-    if command -v traceroute >/dev/null 2>&1; then
-        traceroute -m 30 -w 2 -q 1 "$host" 2>/dev/null \
-            || error_exit "traceroute to $host failed"
-    elif command -v tracepath >/dev/null 2>&1; then
-        tracepath "$host" 2>/dev/null \
-            || error_exit "tracepath to $host failed"
+    echo -e "${YELLOW}TCP listening ports:${NC}"
+    if command -v ss >/dev/null 2>&1; then
+        ss -tlnp 2>/dev/null \
+            | awk 'NR==1{printf "  %-8s %-30s %-30s %s\n",$1,$4,$5,$6}
+                   NR>1{printf "  %-8s %-30s %-30s %s\n",$1,$4,$5,$6}'
     else
-        error_exit "No traceroute tool. Install: sudo apt install traceroute"
+        netstat -tlnp 2>/dev/null | sed 's/^/  /'
     fi
+
+    echo -e "\n${YELLOW}UDP listening ports:${NC}"
+    if command -v ss >/dev/null 2>&1; then
+        ss -ulnp 2>/dev/null \
+            | awk 'NR==1{printf "  %-8s %-30s %-30s %s\n",$1,$4,$5,$6}
+                   NR>1{printf "  %-8s %-30s %-30s %s\n",$1,$4,$5,$6}'
+    else
+        netstat -ulnp 2>/dev/null | sed 's/^/  /'
+    fi
+
+    echo -e "\n${YELLOW}Established connections (top 15):${NC}"
+    ss -tupn state established 2>/dev/null | head -15 | sed 's/^/  /' \
+        || netstat -tupn 2>/dev/null | head -15 | sed 's/^/  /'
+
+    echo -e "\n${BLUE}Tip:${NC} Run as root to see process names for all ports."
 }
 
 # ---------------------------------------------------------------------------
-# 7. DNS Resolution  (fixed dig syntax)
+# 8. Host Discovery (local subnet) — NEW
+# ---------------------------------------------------------------------------
+
+host_discovery() {
+    section "Host Discovery — Local Subnet"
+
+    local subnet
+    subnet=$(ip route show 2>/dev/null \
+        | awk '/src/ && !/default/ && /\//{print $1; exit}')
+    subnet=${subnet:-192.168.1.0/24}
+
+    read -rp "Subnet to scan (default: $subnet): " target
+    target=${target:-$subnet}
+
+    log_action "Host discovery on $target"
+    echo -e "${YELLOW}Scanning $target for live hosts...${NC}\n"
+
+    if command -v nmap >/dev/null 2>&1; then
+        echo -e "${BLUE}Using nmap ping sweep:${NC}"
+        nmap -sn "$target" 2>/dev/null \
+            | grep -E '(Nmap scan report|Host is up|MAC Address)' \
+            | sed 's/Nmap scan report for /  Host : /;
+                   s/Host is up/      Status : UP/;
+                   s/MAC Address/      MAC    /;
+                   s/^//'
+    elif command -v arp-scan >/dev/null 2>&1; then
+        echo -e "${BLUE}Using arp-scan:${NC}"
+        sudo arp-scan "$target" 2>/dev/null | sed 's/^/  /'
+    else
+        # Manual ICMP ping sweep using background jobs
+        echo -e "${BLUE}Using ping sweep (no nmap/arp-scan found):${NC}"
+        echo -e "${YELLOW}Pinging all hosts — this may take ~15s...${NC}\n"
+
+        local base
+        base=$(echo "$target" | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+')
+        if [[ -z "$base" ]]; then
+            error_exit "Could not determine base address from $target"
+            return
+        fi
+
+        local results=()
+        for i in $(seq 1 254); do
+            {
+                if ping -c 1 -W 1 "${base}.${i}" &>/dev/null; then
+                    echo "${base}.${i}"
+                fi
+            } &
+        done
+        wait
+
+        # Collect results from subshells via temp file
+        for i in $(seq 1 254); do
+            if ping -c 1 -W 1 "${base}.${i}" &>/dev/null; then
+                echo -e "  ${GREEN}[UP]${NC} ${base}.${i}"
+            fi
+        done
+    fi
+
+    echo -e "\n${BLUE}Tip:${NC} Use option 6 (Port Scan) on discovered hosts for further enumeration."
+}
+
+# ---------------------------------------------------------------------------
+# 9. DNS Resolution
 # ---------------------------------------------------------------------------
 
 check_dns() {
@@ -292,8 +392,18 @@ check_dns() {
         echo -e "\n${BLUE}Nameservers:${NC}"
         dig +short NS "$domain" 2>/dev/null | sed 's/^/  /' || echo "  None"
 
+        echo -e "\n${BLUE}TXT records:${NC}"
+        dig +short TXT "$domain" 2>/dev/null | sed 's/^/  /' || echo "  None"
+
         echo -e "\n${BLUE}Query time:${NC}"
         dig A "$domain" 2>/dev/null | grep "Query time" | sed 's/^/  /'
+
+        echo -e "\n${BLUE}DNSSEC:${NC}"
+        if dig +dnssec "$domain" 2>/dev/null | grep -q "RRSIG"; then
+            echo -e "  ${GREEN}DNSSEC enabled${NC}"
+        else
+            echo -e "  ${YELLOW}DNSSEC not detected${NC}"
+        fi
     elif command -v nslookup >/dev/null 2>&1; then
         nslookup "$domain" 2>/dev/null
     elif command -v host >/dev/null 2>&1; then
@@ -303,14 +413,227 @@ check_dns() {
         return
     fi
 
-    echo -e "\n${BLUE}Active DNS servers:${NC}"
+    echo -e "\n${BLUE}Active DNS servers (/etc/resolv.conf):${NC}"
     grep -E '^nameserver' /etc/resolv.conf 2>/dev/null \
         | awk '{print "  "$2}' \
         || echo "  Could not read /etc/resolv.conf"
 }
 
 # ---------------------------------------------------------------------------
-# 8. Speed Test  (fixed URLs + shows Mbps)
+# 10. SSL Certificate Check
+# ---------------------------------------------------------------------------
+
+ssl_check() {
+    read -rp "Enter domain to inspect (default: google.com): " domain
+    domain=${domain:-google.com}
+
+    read -rp "Port (default: 443): " port
+    port=${port:-443}
+
+    check_dependencies "openssl" || return
+
+    echo -e "\n${YELLOW}SSL/TLS certificate for ${domain}:${port}${NC}\n"
+    log_action "SSL check: $domain:$port"
+
+    local cert_info
+    cert_info=$(echo | timeout 5 openssl s_client \
+        -connect "${domain}:${port}" -servername "$domain" 2>/dev/null \
+        | openssl x509 -noout -subject -issuer -dates -fingerprint 2>/dev/null)
+
+    if [[ -z "$cert_info" ]]; then
+        error_exit "Could not retrieve certificate from ${domain}:${port}"
+        return
+    fi
+
+    while IFS= read -r line; do
+        local key val
+        key=$(echo "$line" | cut -d= -f1 | xargs)
+        val=$(echo "$line" | cut -d= -f2- | xargs)
+        case "$key" in
+            subject)
+                echo -e "  ${BLUE}Subject    :${NC} $val" ;;
+            issuer)
+                echo -e "  ${BLUE}Issuer     :${NC} $val" ;;
+            notBefore)
+                echo -e "  ${BLUE}Valid from :${NC} $val" ;;
+            notAfter)
+                local exp_epoch now_epoch days_left color
+                exp_epoch=$(date -d "$val" +%s 2>/dev/null \
+                    || date -j -f "%b %d %H:%M:%S %Y %Z" "$val" +%s 2>/dev/null)
+                now_epoch=$(date +%s)
+                days_left=$(( (exp_epoch - now_epoch) / 86400 ))
+                color=$GREEN
+                (( days_left < 30 )) && color=$YELLOW
+                (( days_left < 7  )) && color=$RED
+                echo -e "  ${BLUE}Expires    :${NC} $val ${color}(${days_left} days left)${NC}"
+                ;;
+            "SHA1 Fingerprint")
+                echo -e "  ${BLUE}SHA1       :${NC} $val" ;;
+        esac
+    done <<< "$cert_info"
+
+    echo -e "\n  ${BLUE}TLS protocol & cipher:${NC}"
+    echo | timeout 5 openssl s_client \
+        -connect "${domain}:${port}" -servername "$domain" 2>/dev/null \
+        | grep -E '^\s*(Protocol|Cipher)' | sed 's/^/    /'
+
+    echo -e "\n  ${BLUE}Supported protocols check:${NC}"
+    for proto in tls1 tls1_1 tls1_2 tls1_3; do
+        result=$(echo | timeout 3 openssl s_client \
+            -"$proto" -connect "${domain}:${port}" \
+            -servername "$domain" 2>/dev/null \
+            | grep -c "^SSL-Session")
+        if [[ "$result" -gt 0 ]]; then
+            label="${proto/tls1_/TLS 1.}"
+            label="${label/tls1/TLS 1.0}"
+            label="${label/tls1_3/TLS 1.3}"
+            if [[ "$proto" == "tls1" || "$proto" == "tls1_1" ]]; then
+                echo -e "    ${RED}[WEAK]${NC}  $label — should be disabled"
+            else
+                echo -e "    ${GREEN}[OK]${NC}    $label"
+            fi
+        fi
+    done
+}
+
+# ---------------------------------------------------------------------------
+# 11. HTTP Response Checker — NEW
+# ---------------------------------------------------------------------------
+
+http_response_check() {
+    read -rp "Enter URL (default: https://google.com): " url
+    url=${url:-https://google.com}
+    [[ "$url" != http* ]] && url="https://$url"
+
+    check_dependencies "curl" || return
+    log_action "HTTP response check: $url"
+
+    echo -e "\n${YELLOW}Checking: ${CYAN}${url}${NC}\n"
+
+    # Full headers + timing
+    local header_file="$TEMP_DIR/headers.txt"
+    local timing
+    timing=$(curl -sI \
+        --max-time 10 --connect-timeout 5 \
+        -L \
+        -D "$header_file" \
+        -w "%{http_code}\t%{time_connect}\t%{time_total}\t%{url_effective}\t%{num_redirects}\t%{size_download}" \
+        -o /dev/null \
+        "$url" 2>/dev/null)
+
+    IFS=$'\t' read -r http_code t_connect t_total final_url redirects size <<< "$timing"
+
+    if [[ -z "$http_code" ]]; then
+        error_exit "Could not reach $url"
+        return
+    fi
+
+    # Status color
+    local status_color=$GREEN
+    [[ "$http_code" -ge 300 && "$http_code" -lt 400 ]] && status_color=$CYAN
+    [[ "$http_code" -ge 400 ]] && status_color=$YELLOW
+    [[ "$http_code" -ge 500 ]] && status_color=$RED
+
+    echo -e "  ${BLUE}Status Code   :${NC} ${status_color}${http_code}${NC}"
+    echo -e "  ${BLUE}Final URL     :${NC} $final_url"
+    echo -e "  ${BLUE}Redirects     :${NC} $redirects"
+    echo -e "  ${BLUE}Connect Time  :${NC} ${t_connect}s"
+    echo -e "  ${BLUE}Total Time    :${NC} ${t_total}s"
+    echo -e "  ${BLUE}Response Size :${NC} ${size} bytes"
+
+    # Key headers from response
+    if [[ -f "$header_file" ]]; then
+        echo -e "\n  ${BLUE}Response headers:${NC}"
+        grep -iE '(server|content-type|x-powered-by|location|content-encoding|cache-control|strict-transport|x-frame|content-security)' \
+            "$header_file" 2>/dev/null \
+            | sed 's/^/    /'
+
+        # Security header audit
+        echo -e "\n  ${BLUE}Security header check:${NC}"
+        local sec_headers=("Strict-Transport-Security" "Content-Security-Policy"
+                           "X-Frame-Options" "X-Content-Type-Options"
+                           "Referrer-Policy" "Permissions-Policy")
+        for h in "${sec_headers[@]}"; do
+            if grep -qi "^${h}:" "$header_file" 2>/dev/null; then
+                echo -e "    ${GREEN}[PRESENT]${NC} $h"
+            else
+                echo -e "    ${RED}[MISSING]${NC} $h"
+            fi
+        done
+
+        # Server/framework disclosure
+        echo -e "\n  ${BLUE}Information disclosure:${NC}"
+        local info_headers=("Server" "X-Powered-By" "X-AspNet-Version" "X-Generator")
+        for h in "${info_headers[@]}"; do
+            local val
+            val=$(grep -i "^${h}:" "$header_file" 2>/dev/null | head -1)
+            if [[ -n "$val" ]]; then
+                echo -e "    ${YELLOW}[DISCLOSED]${NC} $val"
+            fi
+        done
+    fi
+}
+
+# ---------------------------------------------------------------------------
+# 12. Firewall Status — NEW
+# ---------------------------------------------------------------------------
+
+firewall_status() {
+    section "Firewall Status"
+    log_action "Checking firewall status"
+
+    local found=0
+
+    # UFW
+    if command -v ufw >/dev/null 2>&1; then
+        found=1
+        echo -e "${YELLOW}UFW (Uncomplicated Firewall):${NC}"
+        sudo ufw status verbose 2>/dev/null | sed 's/^/  /' \
+            || ufw status 2>/dev/null | sed 's/^/  /'
+    fi
+
+    # firewalld
+    if command -v firewall-cmd >/dev/null 2>&1; then
+        found=1
+        echo -e "\n${YELLOW}firewalld:${NC}"
+        if sudo firewall-cmd --state 2>/dev/null | grep -q "running"; then
+            echo -e "  ${GREEN}Status: running${NC}"
+            sudo firewall-cmd --list-all 2>/dev/null | sed 's/^/  /'
+        else
+            echo -e "  ${YELLOW}firewalld is installed but not running${NC}"
+        fi
+    fi
+
+    # iptables
+    if command -v iptables >/dev/null 2>&1; then
+        found=1
+        echo -e "\n${YELLOW}iptables — INPUT chain:${NC}"
+        sudo iptables -L INPUT -n --line-numbers 2>/dev/null \
+            | head -30 | sed 's/^/  /' \
+            || echo "  (run as root to view iptables rules)"
+
+        echo -e "\n${YELLOW}iptables — FORWARD chain:${NC}"
+        sudo iptables -L FORWARD -n --line-numbers 2>/dev/null \
+            | head -15 | sed 's/^/  /' \
+            || echo "  (run as root to view iptables rules)"
+    fi
+
+    # nftables
+    if command -v nft >/dev/null 2>&1; then
+        found=1
+        echo -e "\n${YELLOW}nftables:${NC}"
+        sudo nft list ruleset 2>/dev/null | head -40 | sed 's/^/  /' \
+            || echo "  (run as root to view nftables rules)"
+    fi
+
+    if [[ $found -eq 0 ]]; then
+        echo -e "${YELLOW}No firewall tool detected (ufw / firewalld / iptables / nft).${NC}"
+        echo -e "  Install UFW with: ${CYAN}sudo apt install ufw${NC}"
+    fi
+}
+
+# ---------------------------------------------------------------------------
+# 13. Speed Test
 # ---------------------------------------------------------------------------
 
 speed_test() {
@@ -319,7 +642,6 @@ speed_test() {
 
     check_dependencies "curl" || return
 
-    # Prefer dedicated CLI tools if available
     if command -v speedtest-cli >/dev/null 2>&1; then
         echo -e "${BLUE}Using speedtest-cli:${NC}"
         speedtest-cli --simple 2>/dev/null
@@ -366,77 +688,16 @@ speed_test() {
 }
 
 # ---------------------------------------------------------------------------
-# 9. SSL Certificate Check (NEW)
-# ---------------------------------------------------------------------------
-
-ssl_check() {
-    read -rp "Enter domain to inspect (default: google.com): " domain
-    domain=${domain:-google.com}
-
-    read -rp "Port (default: 443): " port
-    port=${port:-443}
-
-    check_dependencies "openssl" || return
-
-    echo -e "\n${YELLOW}SSL/TLS certificate for ${domain}:${port}${NC}\n"
-    log_action "SSL check: $domain:$port"
-
-    local cert_info
-    cert_info=$(echo | timeout 5 openssl s_client \
-        -connect "${domain}:${port}" -servername "$domain" 2>/dev/null \
-        | openssl x509 -noout -subject -issuer -dates -fingerprint 2>/dev/null)
-
-    if [[ -z "$cert_info" ]]; then
-        error_exit "Could not retrieve certificate from ${domain}:${port}"
-        return
-    fi
-
-    while IFS= read -r line; do
-        local key val
-        key=$(echo "$line" | cut -d= -f1 | xargs)
-        val=$(echo "$line" | cut -d= -f2- | xargs)
-        case "$key" in
-            subject)
-                echo -e "  ${BLUE}Subject    :${NC} $val" ;;
-            issuer)
-                echo -e "  ${BLUE}Issuer     :${NC} $val" ;;
-            notBefore)
-                echo -e "  ${BLUE}Valid from :${NC} $val" ;;
-            notAfter)
-                # Calculate days remaining
-                local exp_epoch now_epoch days_left color
-                exp_epoch=$(date -d "$val" +%s 2>/dev/null \
-                    || date -j -f "%b %d %H:%M:%S %Y %Z" "$val" +%s 2>/dev/null)
-                now_epoch=$(date +%s)
-                days_left=$(( (exp_epoch - now_epoch) / 86400 ))
-                color=$GREEN
-                (( days_left < 30 )) && color=$YELLOW
-                (( days_left < 7  )) && color=$RED
-                echo -e "  ${BLUE}Expires    :${NC} $val ${color}(${days_left} days left)${NC}"
-                ;;
-            "SHA1 Fingerprint")
-                echo -e "  ${BLUE}SHA1       :${NC} $val" ;;
-        esac
-    done <<< "$cert_info"
-
-    echo -e "\n  ${BLUE}TLS protocol & cipher:${NC}"
-    echo | timeout 5 openssl s_client \
-        -connect "${domain}:${port}" -servername "$domain" 2>/dev/null \
-        | grep -E '^\s*(Protocol|Cipher)' | sed 's/^/    /'
-}
-
-# ---------------------------------------------------------------------------
-# 10. Connection Info + Geolocation (enhanced)
+# 14. Connection Info & Geolocation
 # ---------------------------------------------------------------------------
 
 connection_info() {
-    echo -e "\n${GREEN}=== Connection Information ===${NC}\n"
+    section "Connection Information"
 
     echo -e "${YELLOW}Public IP & Geolocation:${NC}"
     local geo
     geo=$(curl -s --max-time 5 "http://ip-api.com/json" 2>/dev/null)
     if [[ -n "$geo" ]]; then
-        # Parse with python3 if available, else grep fallback
         if command -v python3 >/dev/null 2>&1; then
             python3 - <<'EOF' <<< "$geo"
 import sys, json
@@ -465,14 +726,13 @@ EOF
 }
 
 # ---------------------------------------------------------------------------
-# 11. WiFi Diagnostics (NEW)
+# 15. WiFi Diagnostics
 # ---------------------------------------------------------------------------
 
 wifi_info() {
-    echo -e "\n${GREEN}=== WiFi Diagnostics ===${NC}\n"
+    section "WiFi Diagnostics"
     log_action "WiFi diagnostics"
 
-    # Detect wireless interface (starts with wl on Linux)
     local wlan
     wlan=$(ip link show | awk -F': ' '/^ *[0-9]+: wl/{print $2; exit}' | awk '{print $1}')
 
@@ -483,7 +743,6 @@ wifi_info() {
 
     echo -e "${YELLOW}Interface: ${CYAN}${wlan}${NC}\n"
 
-    # iw (preferred, modern)
     if command -v iw >/dev/null 2>&1; then
         echo -e "${BLUE}Connection details:${NC}"
         iw dev "$wlan" link 2>/dev/null \
@@ -496,7 +755,6 @@ wifi_info() {
             | sed 's/^\s*/  /'
     fi
 
-    # nmcli — nearby networks
     if command -v nmcli >/dev/null 2>&1; then
         echo -e "\n${BLUE}Active connection:${NC}"
         nmcli -t -f NAME,TYPE,DEVICE,STATE connection show --active 2>/dev/null \
@@ -507,7 +765,6 @@ wifi_info() {
             | head -15 | sed 's/^/  /'
     fi
 
-    # iwconfig fallback if iw not available
     if ! command -v iw >/dev/null 2>&1 && command -v iwconfig >/dev/null 2>&1; then
         echo -e "${BLUE}Connection details (iwconfig):${NC}"
         iwconfig "$wlan" 2>/dev/null | sed 's/^/  /'
@@ -515,7 +772,7 @@ wifi_info() {
 }
 
 # ---------------------------------------------------------------------------
-# 12. Bandwidth Monitor — live (NEW)
+# 16. Bandwidth Monitor (live)
 # ---------------------------------------------------------------------------
 
 bandwidth_monitor() {
@@ -524,7 +781,6 @@ bandwidth_monitor() {
         return
     fi
 
-    # Detect default interface
     local default_iface
     default_iface=$(ip route show default 2>/dev/null \
         | grep -oE 'dev [^ ]+' | awk '{print $2}' | head -1)
@@ -546,7 +802,6 @@ bandwidth_monitor() {
 
     log_action "Bandwidth monitor started on $iface"
 
-    # Override INT trap so Ctrl+C stops the monitor but not the whole script
     local _running=1
     local _old_int
     _old_int=$(trap -p INT)
@@ -587,7 +842,6 @@ bandwidth_monitor() {
         sleep 1
     done
 
-    # Restore original INT trap
     eval "${_old_int:-trap - INT}"
     echo -e "\n${YELLOW}Monitor stopped.${NC}"
     log_action "Bandwidth monitor stopped on $iface"
@@ -600,33 +854,39 @@ bandwidth_monitor() {
 show_menu() {
     clear
     echo -e "${GREEN}"
-    echo "╔══════════════════════════════════════════════╗"
-    echo "║        NETWORK TOOL BY @lexlucas             ║"
-    echo "║                Version 3.0                   ║"
-    echo "╚══════════════════════════════════════════════╝"
+    echo "╔══════════════════════════════════════════════════╗"
+    echo "║          NET DIAGNOSTIC TOOL v4.0                ║"
+    echo "║            by @lexlucas                          ║"
+    echo "╚══════════════════════════════════════════════════╝"
     echo -e "${NC}"
 
-    echo -e "  ${CYAN}Diagnostics${NC}"
+    echo -e "  ${CYAN}── Diagnostics ──────────────────────────────${NC}"
     echo "   1)  Network Interfaces"
     echo "   2)  Ping Host"
     echo "   3)  Latency Graph"
-    echo "   4)  Port Scan"
+    echo "   4)  Traceroute"
     echo "   5)  Routing Table"
-    echo "   6)  Traceroute"
     echo ""
-    echo -e "  ${CYAN}Information${NC}"
-    echo "   7)  DNS Resolution"
-    echo "   8)  Speed Test"
-    echo "   9)  SSL Certificate Check"
-    echo "  10)  Connection Info & Geolocation"
-    echo "  11)  WiFi Diagnostics"
+    echo -e "  ${CYAN}── Scanning & Discovery ─────────────────────${NC}"
+    echo "   6)  Port Scan (Nmap)"
+    echo "   7)  Listening Services (local)"
+    echo "   8)  Host Discovery (local subnet)"
     echo ""
-    echo -e "  ${CYAN}Monitor${NC}"
-    echo "  12)  Bandwidth Monitor (live)"
+    echo -e "  ${CYAN}── Security & Analysis ──────────────────────${NC}"
+    echo "   9)  DNS Resolution"
+    echo "  10)  SSL Certificate Check"
+    echo "  11)  HTTP Response Checker"
+    echo "  12)  Firewall Status"
     echo ""
-    echo -e "  ${CYAN}Other${NC}"
-    echo "  13)  View Log"
-    echo "  14)  Exit"
+    echo -e "  ${CYAN}── Information & Monitoring ─────────────────${NC}"
+    echo "  13)  Speed Test"
+    echo "  14)  Connection Info & Geolocation"
+    echo "  15)  WiFi Diagnostics"
+    echo "  16)  Bandwidth Monitor (live)"
+    echo ""
+    echo -e "  ${CYAN}── Other ─────────────────────────────────────${NC}"
+    echo "  17)  View Log"
+    echo "  18)  Exit"
     echo ""
 }
 
@@ -636,31 +896,35 @@ show_menu() {
 
 main() {
     setup_environment
-    log_action "Network Tool v3.0 started"
+    log_action "Net Diagnostic Tool v4.0 started"
 
     while true; do
         show_menu
-        read -rp "Enter choice (1-14): " choice
+        read -rp "Enter choice (1-18): " choice
         echo ""
 
         case $choice in
             1)  show_interfaces ;;
             2)  ping_host ;;
             3)  latency_graph ;;
-            4)  port_scan ;;
+            4)  trace_route ;;
             5)  show_routing ;;
-            6)  trace_route ;;
-            7)  check_dns ;;
-            8)  speed_test ;;
-            9)  ssl_check ;;
-            10) connection_info ;;
-            11) wifi_info ;;
-            12) bandwidth_monitor ;;
-            13)
+            6)  port_scan ;;
+            7)  listening_services ;;
+            8)  host_discovery ;;
+            9)  check_dns ;;
+            10) ssl_check ;;
+            11) http_response_check ;;
+            12) firewall_status ;;
+            13) speed_test ;;
+            14) connection_info ;;
+            15) wifi_info ;;
+            16) bandwidth_monitor ;;
+            17)
                 echo -e "${YELLOW}Last 30 log entries:${NC}\n"
                 tail -30 "$LOG_FILE" 2>/dev/null || echo "No log file at $LOG_FILE"
                 ;;
-            14)
+            18)
                 echo -e "${GREEN}Goodbye.${NC}"
                 log_action "Tool exited"
                 exit 0
@@ -670,7 +934,7 @@ main() {
                 ;;
         esac
 
-        echo -e "\n${BLUE}────────────────────────────────────────────────${NC}"
+        echo -e "\n${BLUE}────────────────────────────────────────────────────${NC}"
         read -rp "Press Enter to return to menu..."
     done
 }

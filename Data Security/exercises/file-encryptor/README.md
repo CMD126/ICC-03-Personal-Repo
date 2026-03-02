@@ -36,7 +36,7 @@ pip install cryptography
 ### Usage
 1. Run:
    ```bash
-   python lexcrypt.py
+   python lexcrypt_file_encryptor.py
    ```
 
 2. **Set Master Password**:

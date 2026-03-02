@@ -85,8 +85,8 @@ A menu-driven bash script for common Ubuntu/Debian system administration tasks. 
 ## Usage
 
 ```bash
-chmod +x act.sh
-./act.sh
+chmod +x syscript_sysadmin.sh
+./syscript_sysadmin.sh
 ```
 
 ---

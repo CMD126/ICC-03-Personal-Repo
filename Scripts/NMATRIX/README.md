@@ -36,11 +36,11 @@ A bash menu-driven frontend for `nmap` with a Matrix digital-rain intro animatio
 ## Usage
 
 ```bash
-chmod +x nmatrix.sh
-./nmatrix.sh
+chmod +x nmatrix_nmap_scanner.sh
+./nmatrix_nmap_scanner.sh
 
 # Some scans (SYN, OS detection) need root:
-sudo ./nmatrix.sh
+sudo ./nmatrix_nmap_scanner.sh
 ```
 
 ## Notes
