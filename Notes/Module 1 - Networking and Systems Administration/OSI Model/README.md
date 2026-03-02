@@ -14,8 +14,8 @@ Mnemonic (top → bottom): **All People Seem To Need Data Processing**
 | **5** | Session | Manages sessions between applications: establishes, maintains, and terminates connections. | NetBIOS, RPC, PPTP |
 | **4** | Transport | Provides reliable delivery, segmentation, sequencing, flow control, and error checking. Defines ports. | TCP, UDP, SCTP |
 | **3** | Network | Handles logical addressing, routing, and packet forwarding across networks. | IP (IPv4/IPv6), ICMP, IPsec |
-| **2** | Data Link | Provides node-to-node data transfer, framing, and MAC addressing. Error detection. | Ethernet, Wi-Fi (802.11), ARP, PPP |
-| **1** | Physical | Transmits raw bits over physical media as electrical, optical, or radio signals. | Cables, hubs, switches, fiber, radio waves |
+| **2** | Data Link | Provides node-to-node data transfer, framing, and MAC addressing. Error detection. | Ethernet, Wi-Fi (802.11), ARP, PPP, switches |
+| **1** | Physical | Transmits raw bits over physical media as electrical, optical, or radio signals. | Cables, hubs, repeaters, fiber, radio waves |
 
 ---
 

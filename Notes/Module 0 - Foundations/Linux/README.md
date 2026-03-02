@@ -51,7 +51,7 @@ A quick reference of commonly used Linux commands for file management, navigatio
 | Command | Description |
 |---------|-------------|
 | **chmod \<mode\> \<file\>** | Change file permissions. |
-| **chown \<user\>:<group> \<file\>** | Change file owner and group. |
+| **chown \<user\>:\<group\> \<file\>** | Change file owner and group. |
 | **ls -l** | List files with detailed permissions and metadata. |
 
 ---

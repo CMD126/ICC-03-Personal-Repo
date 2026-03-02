@@ -20,7 +20,7 @@ Here are some useful filters and shortcuts.
 | `dns` | Show only DNS traffic. |
 | `arp` | Show only ARP traffic. |
 | `icmp` | Show only ICMP packets (ping, traceroute). |
-| `tls` or `ssl` | Show TLS/SSL (HTTPS) traffic. |
+| `tls` | Show TLS/SSL (HTTPS) traffic. (`ssl` also works in older Wireshark versions.) |
 | `tcp contains "login"` | Show TCP packets containing the string “login”. |
 | `frame contains "password"` | Show packets containing the string “password”. |
 
@@ -54,7 +54,8 @@ Here are some useful filters and shortcuts.
 | `Ctrl+F` | Find within captured packets. |
 | `Ctrl+H` | Show/hide packet details pane. |
 | `Ctrl+Shift+P` | Open Wireshark preferences. |
-| `Ctrl+=` / `Ctrl+-` | Zoom in / Zoom out. |
+| `Ctrl+=` | Zoom in. |
+| `Ctrl+-` | Zoom out. |
 | `Ctrl+M` | Mark/unmark a packet. |
 | `Ctrl+Shift+M` | Jump to the next marked packet. |
 | `Ctrl+Alt+Shift+T` | Show time statistics. |
