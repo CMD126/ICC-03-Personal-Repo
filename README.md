@@ -4,8 +4,8 @@
 
 - [About](#about)
 - [Repository Structure](#repository-structure)
-- [Tools](#tools)
-- [Notes](#notes)
+- [Scripts](#scripts)
+- [Modules](#modules)
 - [Getting Started](#getting-started)
 - [License](#license)
 
@@ -21,47 +21,120 @@ Here you will find tools and resources to support learning across network securi
 
 ## Repository Structure
 
-| Directory | Description |
-|-----------|-------------|
-| `/Scripts` | Custom-built scripts to automate and simplify common cybersecurity tasks. |
-| `/Exercises` | Hands-on exercises and simulations, including encryption and defensive labs. |
-| `/Notes` | Personal study notes organized by course module (Module 0–8). |
+```
+ICC-03-Personal-Repo/
+├── Scripts/                              # Custom-built cybersecurity tools
+├── Foundations/
+│   ├── notes/                            # Linux, Ubuntu cheat sheets
+│   └── exercises/
+├── Networking and Systems Administration/
+│   ├── notes/                            # OSI Model, Wireshark cheat sheets
+│   └── exercises/
+├── Governance, Risk, and Compliance (GRC)/
+│   ├── notes/
+│   └── exercises/
+├── Data Security/
+│   ├── notes/
+│   └── exercises/                        # file-encryptor, password-auditor, ransomware-simulator
+├── Security Operations/
+│   ├── notes/
+│   └── exercises/                        # log-analyzer
+├── Cloud Security/
+│   ├── notes/
+│   └── exercises/
+├── Threat Hunting/
+│   ├── notes/
+│   └── exercises/
+├── Application Security and Vulnerability Analysis/
+│   ├── notes/
+│   └── exercises/                        # web-headers-checker
+└── Penetration Testing/
+    ├── notes/                            # Nmap cheat sheet
+    └── exercises/                        # port-scanner
+```
 
 ---
 
-## Tools
+## Scripts
 
-Each tool lives in its own directory under `/Scripts` with a `README.md` containing detailed usage instructions.
-
-**Note:** Educational simulations (e.g., ransomware) are located under `/Exercises` for safety and learning focus.
+Production-quality tools, each in its own directory under `/Scripts` with a `README.md`.
 
 | Tool | Description |
 |------|-------------|
-| [Syscript](./Scripts/syscript/) | **v2.0** — A menu-driven bash toolkit for Ubuntu/Debian administration. Covers package management, system info, networking, service control, firewall status, and a live system health dashboard. |
-| [NMATRIX](./Scripts/NMATRIX/) | **v2.0** — A Matrix-style, menu-driven frontend for `nmap` with 8 scan types (Quick/Full TCP, Service+Script, OS Detection, UDP, Ping Sweep, Vulnerability, Custom), scan logging, and save-to-file support. |
-| [Network-Tool](./Scripts/Network-Tool/) | **v3.0** — A comprehensive bash network diagnostic utility with 14 options including a latency ASCII graph, SSL certificate checker, WiFi diagnostics, real-time bandwidth monitor, and geolocation lookup. |
-| [ABDNS](./Scripts/ABDNS/) | A Python script that benchmarks 9 public DNS providers using real UDP queries, reports packet loss, and applies the fastest primary + secondary DNS on Linux, macOS, or Windows. |
-| [Basic Py Script](./Scripts/Basic_py_script/) | A simple Python script that demonstrates how to execute shell commands (`ls`, `whoami`) and print their output to the console. |
-| [LEXCRYPT](./Exercises/Lexcript/) | A Python GUI app (Tkinter) for file and message encryption/decryption. Uses PBKDF2-SHA256 key derivation, Fernet (AES-128-CBC) encryption, and chunked I/O for large files. |
-| [Ransomware Simulator](./Exercises/ransomware_py/) | **Educational only** — A Python-based simulation demonstrating ransomware encryption/decryption using password-derived keys and Fernet (AES). Includes full recovery. |
+| [syscript](./Scripts/syscript/) | **v2.0** — Menu-driven Bash toolkit for Ubuntu/Debian administration. Covers package management, system info, networking, service control, firewall status, and a live system health dashboard. |
+| [nmatrix](./Scripts/nmatrix/) | **v2.0** — Matrix-style, menu-driven Nmap frontend with 8 scan types (Quick/Full TCP, Service+Script, OS Detection, UDP, Ping Sweep, Vulnerability, Custom), scan logging, and save-to-file support. |
+| [network-tool](./Scripts/network-tool/) | **v4.0** — Comprehensive Bash network diagnostic utility with 16 options across 4 categories: Diagnostics, Scanning & Discovery (host discovery, listening services), Security & Analysis (HTTP response checker, firewall status, SSL/TLS, DNS), and Information & Monitoring. |
+| [abdns](./Scripts/abdns/) | Python tool that benchmarks 9 public DNS providers using real UDP queries, reports packet loss, and applies the fastest primary + secondary DNS on Linux, macOS, or Windows. |
+| [hash-toolkit](./Scripts/hash-toolkit/) | **v1.0** — Menu-driven Python utility to identify hash types (MD5 → bcrypt → Argon2), generate hashes with optional salt, verify file integrity, and compare digests using constant-time comparison. |
+| [recon-tool](./Scripts/recon-tool/) | **v1.0** — Automated OSINT and reconnaissance tool. Covers WHOIS, DNS enumeration, subdomain brute-forcing, port scanning, HTTP security headers, SSL/TLS analysis, and IP geolocation — all from one menu. |
 
 ---
 
-## Notes
+## Modules
 
-Study notes are organized by course module under `/Notes`. Each module contains cheat sheets and references for its topic area.
+Each module contains a `notes/` folder with cheat sheets and an `exercises/` folder with hands-on Python or Bash projects.
 
-| Module | Topic | Notes |
-|--------|-------|-------|
-| [Module 0](./Notes/Module%200%20-%20Foundations/) | Foundations | [Linux](./Notes/Module%200%20-%20Foundations/Linux/README.md), [Ubuntu](./Notes/Module%200%20-%20Foundations/Ubuntu/README.md) |
-| [Module 1](./Notes/Module%201%20-%20Networking%20and%20Systems%20Administration/) | Networking and Systems Administration | [OSI Model](./Notes/Module%201%20-%20Networking%20and%20Systems%20Administration/OSI%20Model/README.md), [Wireshark](./Notes/Module%201%20-%20Networking%20and%20Systems%20Administration/Wireshark/README.md) |
-| [Module 2](./Notes/Module%202%20-%20Governance%2C%20Risk%2C%20and%20Compliance%20(GRC)/) | Governance, Risk, and Compliance (GRC) | [GRC Cheat Sheet](./Notes/Module%202%20-%20Governance%2C%20Risk%2C%20and%20Compliance%20(GRC)/README.md) |
-| [Module 3](./Notes/Module%203%20-%20Data%20Security/) | Data Security | [Data Security Cheat Sheet](./Notes/Module%203%20-%20Data%20Security/README.md) |
-| [Module 4](./Notes/Module%204%20-%20Security%20Operations/) | Security Operations | [SecOps Cheat Sheet](./Notes/Module%204%20-%20Security%20Operations/README.md) |
-| [Module 5](./Notes/Module%205%20-%20Cloud%20Security/) | Cloud Security | [Cloud Security Cheat Sheet](./Notes/Module%205%20-%20Cloud%20Security/README.md) |
-| [Module 6](./Notes/Module%206%20-%20Threat%20Hunting/) | Threat Hunting | [Threat Hunting Cheat Sheet](./Notes/Module%206%20-%20Threat%20Hunting/README.md) |
-| [Module 7](./Notes/Module%207%20-%20Application%20Security%20and%20Vulnerability%20Analysis/) | Application Security and Vulnerability Analysis | [AppSec Cheat Sheet](./Notes/Module%207%20-%20Application%20Security%20and%20Vulnerability%20Analysis/README.md) |
-| [Module 8](./Notes/Module%208%20-%20Penetration%20Testing/) | Penetration Testing | [Nmap](./Notes/Module%208%20-%20Penetration%20Testing/Nmap/README.md) |
+**Note:** Educational simulations (e.g., ransomware) are in Data Security — run only in a controlled VM environment.
+
+### Foundations
+
+| Type | Content |
+|------|---------|
+| [Notes](./Foundations/notes/) | [Linux](./Foundations/notes/Linux/README.md), [Ubuntu](./Foundations/notes/Ubuntu/README.md) |
+
+### Networking and Systems Administration
+
+| Type | Content |
+|------|---------|
+| [Notes](./Networking%20and%20Systems%20Administration/notes/) | [OSI Model](./Networking%20and%20Systems%20Administration/notes/OSI%20Model/README.md), [Wireshark](./Networking%20and%20Systems%20Administration/notes/Wireshark/README.md) |
+
+### Governance, Risk, and Compliance (GRC)
+
+| Type | Content |
+|------|---------|
+| [Notes](./Governance%2C%20Risk%2C%20and%20Compliance%20(GRC)/notes/) | [GRC Cheat Sheet](./Governance%2C%20Risk%2C%20and%20Compliance%20(GRC)/notes/README.md) |
+
+### Data Security
+
+| Type | Content |
+|------|---------|
+| [Notes](./Data%20Security/notes/) | [Data Security Cheat Sheet](./Data%20Security/notes/README.md) |
+| [file-encryptor](./Data%20Security/exercises/file-encryptor/) | Python GUI app (Tkinter) for file and message encryption/decryption. Uses PBKDF2-SHA256 key derivation, Fernet (AES-128-CBC), and chunked I/O for large files. |
+| [password-auditor](./Data%20Security/exercises/password-auditor/) | Demonstrates hashing algorithms (MD5 → SHA-512), salting, dictionary attack simulation, and why bcrypt/PBKDF2 are required for secure password storage. |
+| [ransomware-simulator](./Data%20Security/exercises/ransomware-simulator/) | **Educational only** — Python ransomware simulation with encryption/decryption, wallpaper generation, and fullscreen popup. Run in a VM only. |
+
+### Security Operations
+
+| Type | Content |
+|------|---------|
+| [Notes](./Security%20Operations/notes/) | [SecOps Cheat Sheet](./Security%20Operations/notes/README.md) |
+| [log-analyzer](./Security%20Operations/exercises/log-analyzer/) | Parses SSH `auth.log` files to detect brute force attempts, successful logins, and invalid username enumeration. Generates a SOC-style security report. |
+
+### Cloud Security
+
+| Type | Content |
+|------|---------|
+| [Notes](./Cloud%20Security/notes/) | [Cloud Security Cheat Sheet](./Cloud%20Security/notes/README.md) |
+
+### Threat Hunting
+
+| Type | Content |
+|------|---------|
+| [Notes](./Threat%20Hunting/notes/) | [Threat Hunting Cheat Sheet](./Threat%20Hunting/notes/README.md) |
+
+### Application Security and Vulnerability Analysis
+
+| Type | Content |
+|------|---------|
+| [Notes](./Application%20Security%20and%20Vulnerability%20Analysis/notes/) | [AppSec Cheat Sheet](./Application%20Security%20and%20Vulnerability%20Analysis/notes/README.md) |
+| [web-headers-checker](./Application%20Security%20and%20Vulnerability%20Analysis/exercises/web-headers-checker/) | Fetches HTTP response headers from any URL and audits for missing security headers, information disclosure, and scores the target's security posture (A–F). |
+
+### Penetration Testing
+
+| Type | Content |
+|------|---------|
+| [Notes](./Penetration%20Testing/notes/) | [Nmap](./Penetration%20Testing/notes/Nmap/README.md) |
+| [port-scanner](./Penetration%20Testing/exercises/port-scanner/) | TCP connect scanner built with raw Python sockets and multithreading. Scans common ports or custom ranges, maps services, and optionally grabs banners. |
 
 ---
 
@@ -77,4 +150,4 @@ git clone https://github.com/CMD126/ICC-03-Personal-Repo.git
 
 ## License
 
-This project is licensed under the MIT License — see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the MIT License — see the [LICENSE](./LICENSE.md) file for details.

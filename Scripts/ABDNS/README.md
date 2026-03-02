@@ -14,7 +14,7 @@ ABDNS benchmarks public DNS servers using **real UDP DNS queries** (not just pin
 ## Usage
 
 ```bash
-python3 abdns.py [options]
+python3 abdns_dns_benchmark.py [options]
 ```
 
 ### Options
@@ -30,19 +30,19 @@ python3 abdns.py [options]
 
 ```bash
 # Interactive benchmark and apply
-python3 abdns.py
+python3 abdns_dns_benchmark.py
 
 # Verbose benchmark (shows every query result)
-python3 abdns.py -v
+python3 abdns_dns_benchmark.py -v
 
 # Benchmark against custom domains
-python3 abdns.py -d example.com wikipedia.org
+python3 abdns_dns_benchmark.py -d example.com wikipedia.org
 
 # Apply Cloudflare directly (no prompt)
-python3 abdns.py --apply Cloudflare
+python3 abdns_dns_benchmark.py --apply Cloudflare
 
 # List available servers
-python3 abdns.py --list
+python3 abdns_dns_benchmark.py --list
 ```
 
 ## Notes
