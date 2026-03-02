@@ -1,7 +1,6 @@
-# Useful Keyboard Shortcuts
+# Ubuntu Keyboard Shortcuts
 
-This page provides an overview of keyboard shortcuts that can help you use your desktop and applications more efficiently.  
-If you cannot use a mouse or pointing device at all, see **Keyboard navigation** for more information on navigating user interfaces with only the keyboard.
+A quick reference of keyboard shortcuts to navigate the Ubuntu desktop and applications more efficiently.
 
 ---
 
@@ -16,9 +15,12 @@ If you cannot use a mouse or pointing device at all, see **Keyboard navigation**
 | **Alt+Esc** | Switch between windows in the current workspace. Hold **Shift** for reverse order. |
 | **Ctrl+Alt+Tab** | Move keyboard focus between top bar, dash, windows overview, applications list, and search field (use arrow keys to navigate). |
 | **Super+A** | Show the list of applications. |
-| **Super+Page Up / Super+Page Down** | Switch between workspaces. |
-| **Shift+Super+Page Up / Page Down** | Move the current window to a different workspace. |
-| **Shift+Super+← / →** | Move the current window one monitor left or right. |
+| **Super+Page Up** | Switch to the workspace above. |
+| **Super+Page Down** | Switch to the workspace below. |
+| **Shift+Super+Page Up** | Move the current window to the workspace above. |
+| **Shift+Super+Page Down** | Move the current window to the workspace below. |
+| **Shift+Super+←** | Move the current window one monitor to the left. |
+| **Shift+Super+→** | Move the current window one monitor to the right. |
 | **Ctrl+Alt+Delete** | Show the Power Off dialog. |
 | **Super+L** | Lock the screen. |
 | **Super+V** | Show the notification list. Press again or **Esc** to close. |
