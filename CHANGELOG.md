@@ -6,7 +6,18 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
-- Exercises for GRC, Cloud Security, and Threat Hunting — in progress
+- Advanced exercises for Cloud Security and Networking
+
+---
+
+## [3.1.0] — 2026
+
+### Added
+- `file-permissions-auditor` (Foundations) — audit Linux file permissions, find world-writable and SUID/SGID files, interactive permission decoder
+- `subnet-calculator` (Networking) — subnet info, IP class identification, CIDR range expansion, network subdivision
+- `risk-assessment-tool` (GRC) — risk register with Likelihood × Impact scoring, severity levels, response strategies, JSON persistence
+- `iam-policy-analyzer` (Cloud Security) — parse AWS IAM policy JSON, flag wildcards and dangerous permissions, includes `sample_policy.json`
+- `ioc-scanner` (Threat Hunting) — scan logs and directories for IOCs against a threat intel feed, includes `sample_iocs.txt`
 
 ---
 

@@ -1,0 +1,23 @@
+# IOC List — Sample Threat Intelligence Feed
+# Format: type:value:severity:description
+# Lines starting with # are comments
+
+# Known Malicious IPs
+ip:185.220.101.45:HIGH:Tor exit node — C2 traffic observed
+ip:194.165.16.11:HIGH:Known ransomware C2 server
+ip:45.142.212.100:HIGH:Emotet botnet infrastructure
+ip:91.219.236.166:MEDIUM:Suspicious scanning activity
+ip:10.0.0.99:LOW:Internal test IOC
+
+# Known Malicious Domains
+domain:evil-malware.ru:CRITICAL:Active malware distribution
+domain:c2-server.tk:CRITICAL:Command and control server
+domain:phishing-login.xyz:HIGH:Credential harvesting site
+domain:update-flash-player.com:HIGH:Fake update — malware dropper
+domain:suspicious-cdn.net:MEDIUM:Known proxy for C2 traffic
+
+# Known Malicious File Hashes (MD5)
+hash:44d88612fea8a8f36de82e1278abb02f:HIGH:Emotet dropper
+hash:098f6bcd4621d373cade4e832627b4f6:LOW:Test hash (test)
+hash:5d41402abc4b2a76b9719d911017c592:LOW:Test hash (hello)
+hash:e10adc3949ba59abbe56e057f20f883e:CRITICAL:Ransomware encryptor

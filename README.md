@@ -81,18 +81,21 @@ Each module contains a `notes/` folder with cheat sheets and an `exercises/` fol
 | Type | Content |
 |------|---------|
 | [Notes](./Foundations/notes/) | [Linux](./Foundations/notes/Linux/README.md), [Ubuntu](./Foundations/notes/Ubuntu/README.md) |
+| [file-permissions-auditor](./Foundations/exercises/file-permissions-auditor/) | Audits Linux file permissions — finds world-writable files, SUID/SGID binaries, and decodes permission notation interactively. |
 
 ### Networking and Systems Administration
 
 | Type | Content |
 |------|---------|
 | [Notes](./Networking%20and%20Systems%20Administration/notes/) | [OSI Model](./Networking%20and%20Systems%20Administration/notes/OSI%20Model/README.md), [Wireshark](./Networking%20and%20Systems%20Administration/notes/Wireshark/README.md) |
+| [subnet-calculator](./Networking%20and%20Systems%20Administration/exercises/subnet-calculator/) | Calculates subnet information (network/broadcast/host range), identifies IP classes, expands CIDR ranges, and divides networks into equal subnets. |
 
 ### Governance, Risk, and Compliance (GRC)
 
 | Type | Content |
 |------|---------|
 | [Notes](./Governance%2C%20Risk%2C%20and%20Compliance%20(GRC)/notes/) | [GRC Cheat Sheet](./Governance%2C%20Risk%2C%20and%20Compliance%20(GRC)/notes/README.md) |
+| [risk-assessment-tool](./Governance%2C%20Risk%2C%20and%20Compliance%20(GRC)/exercises/risk-assessment-tool/) | Builds a risk register using Likelihood × Impact scoring, assigns severity levels (Low→Critical), recommends response strategies, and saves entries to JSON. |
 
 ### Data Security
 
@@ -115,12 +118,14 @@ Each module contains a `notes/` folder with cheat sheets and an `exercises/` fol
 | Type | Content |
 |------|---------|
 | [Notes](./Cloud%20Security/notes/) | [Cloud Security Cheat Sheet](./Cloud%20Security/notes/README.md) |
+| [iam-policy-analyzer](./Cloud%20Security/exercises/iam-policy-analyzer/) | Parses AWS-style IAM policy JSON files, flags dangerous permissions (wildcards, admin access, public principals), and explains the least privilege principle. |
 
 ### Threat Hunting
 
 | Type | Content |
 |------|---------|
 | [Notes](./Threat%20Hunting/notes/) | [Threat Hunting Cheat Sheet](./Threat%20Hunting/notes/README.md) |
+| [ioc-scanner](./Threat%20Hunting/exercises/ioc-scanner/) | Scans log files and directories for Indicators of Compromise (IPs, domains, file hashes) against a threat intelligence feed. Covers the Pyramid of Pain and hunt reporting. |
 
 ### Application Security and Vulnerability Analysis
 
