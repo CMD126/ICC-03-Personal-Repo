@@ -48,6 +48,10 @@ logs/
 *.swp
 *.swo
 temp/
+
+# Generated runtime files
+salt.bin
+risk_register.json
 .tmp/
 # OS-specific
 .DS_Store

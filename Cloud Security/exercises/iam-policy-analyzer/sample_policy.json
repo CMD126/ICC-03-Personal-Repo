@@ -1,0 +1,50 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AdminAccess",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "*",
+      "Resource": "*"
+    },
+    {
+      "Sid": "S3ReadOnly",
+      "Effect": "Allow",
+      "Principal": { "AWS": "arn:aws:iam::123456789012:user/analyst" },
+      "Action": [
+        "s3:GetObject",
+        "s3:ListBucket"
+      ],
+      "Resource": "arn:aws:s3:::my-bucket/*"
+    },
+    {
+      "Sid": "EC2WildcardActions",
+      "Effect": "Allow",
+      "Principal": { "AWS": "arn:aws:iam::123456789012:role/DevRole" },
+      "Action": "ec2:*",
+      "Resource": "*"
+    },
+    {
+      "Sid": "LogsReadOnly",
+      "Effect": "Allow",
+      "Principal": { "AWS": "arn:aws:iam::123456789012:user/monitor" },
+      "Action": [
+        "logs:GetLogEvents",
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams"
+      ],
+      "Resource": "arn:aws:logs:us-east-1:123456789012:log-group:app-logs:*"
+    },
+    {
+      "Sid": "IAMFullAccess",
+      "Effect": "Allow",
+      "Principal": { "AWS": "arn:aws:iam::123456789012:role/AppRole" },
+      "Action": [
+        "iam:*",
+        "sts:AssumeRole"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
