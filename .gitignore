@@ -103,3 +103,7 @@ Scripts/Convlex/.venv/
 !ImportNotes/
 !ImportNotes/**
 *.swp
+
+# Tooling caches
+.ruff_cache/
+.pytest_cache/

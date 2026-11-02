@@ -12,7 +12,7 @@ A clear and concise description of the bug.
 
 ## Affected File
 
-- File path: (e.g. `Scripts/nmatrix/nmatrix.sh`)
+- File path: (e.g. `tools/nmatrix/nmatrix_nmap_scanner.sh`)
 - Line number(s): (if applicable)
 
 ## Steps to Reproduce
@@ -36,8 +36,8 @@ paste error output here
 ## Environment
 
 - OS: (e.g. Ubuntu 22.04, Windows 11, macOS 14)
-- Python version: (e.g. 3.11) — if applicable
-- Bash version: (e.g. 5.1) — if applicable
+- Python version: (e.g. 3.11), if applicable
+- Bash version: (e.g. 5.1), if applicable
 
 ## Additional Context
 
