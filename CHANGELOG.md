@@ -17,6 +17,7 @@ All notable changes to this repository are documented here.
 - Renamed `Scripts/` to `tools/`, and note folders to lowercase (`notes/OSI Model` is now `notes/osi-model`)
 - Rewrote the main README: a skills table that links each skill to the code behind it, a quick start, and a mapping to MITRE ATT&CK and NIST CSF 2.0
 - Replaced em dashes in the documentation with plain punctuation
+- Rewrote the pull request template: removed the issue-style front matter that GitHub showed as raw text in every PR, and added the CI checks, naming convention and authorized-testing items
 
 ### Fixed
 - `abdns`, `nmatrix` and `network-tool` had their README and script in two folders that differed only in letter case, which broke links and clashes on Windows and macOS
@@ -30,9 +31,6 @@ All notable changes to this repository are documented here.
 - GitHub Actions CI: ruff, pytest, ShellCheck and an offline Markdown link check
 - `tests/` with 24 tests for the log analyzer, IOC scanner, IAM analyzer, risk scoring, header grading and hash toolkit
 - `pyproject.toml` with the lint and test configuration
-
-### Changed (templates)
-- Rewrote the pull request template: removed the issue-style front matter that GitHub showed as raw text in every PR, and added the CI checks, naming convention and authorized-testing items
 
 ---
 
