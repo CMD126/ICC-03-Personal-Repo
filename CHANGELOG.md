@@ -23,7 +23,7 @@ All notable changes to this repository are documented here.
 - `abdns`, `nmatrix` and `network-tool` had their README and script in two folders that differed only in letter case, which broke links and clashes on Windows and macOS
 - `network-tool`: the IP geolocation step fed the JSON response to Python as the script itself, so it never printed. It now passes the data through an environment variable
 - `ransomware-simulator` README pointed to an old `ss/` folder and an old script name, so the screenshots did not show
-- `.gitignore` started with a leftover `cat << 'EOF'` line from the shell command that created it
+- `.gitignore` started with a leftover `cat << 'EOF'` line from the shell command that created it, and ignored `settings.py`, `*.crt`, `migrations/` and `.editorconfig` too broadly
 - `risk-assessment-tool` and `ioc-scanner` computed a severity marker but never printed it
 - Bare `except:` clauses in the ransomware simulator now catch the specific error they expect
 
@@ -31,6 +31,7 @@ All notable changes to this repository are documented here.
 - GitHub Actions CI: ruff, pytest, ShellCheck and an offline Markdown link check
 - `tests/` with 24 tests for the log analyzer, IOC scanner, IAM analyzer, risk scoring, header grading and hash toolkit
 - `pyproject.toml` with the lint and test configuration
+- `docs/BACKLOG.md`, a Scrum backlog with one item per day
 
 ---
 

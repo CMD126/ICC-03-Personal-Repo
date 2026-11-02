@@ -20,7 +20,6 @@ secrets/
 credentials/
 *.key
 *.pem
-*.crt
 *.cert
 *.pfx
 *.p12
@@ -28,14 +27,12 @@ id_rsa
 id_dsa
 *.secret
 config.ini
-settings.py
 # Databases and local storage
 *.db
 *.sqlite
 *.sqlite3
 *.sql
 *.dump
-migrations/
 # Logs and debug
 *.log
 debug/
@@ -68,7 +65,6 @@ $RECYCLE.BIN/
 *.iml
 *.ipr
 *.iws
-*.editorconfig
 # Build and dist
 build/
 dist/
