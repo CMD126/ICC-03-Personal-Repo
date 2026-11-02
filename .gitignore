@@ -1,4 +1,3 @@
-cat << 'EOF' > .gitignore
 # .gitignore for ICC repository
 # Purpose: Ignore temp files, builds, sensitive info (keys, env vars, databases, personal data), OS artifacts, IDE settings, and custom folders to prevent accidental commits.
 # Python bytecode and caches
@@ -107,5 +106,8 @@ Scripts/Convlex/.venv/
 # Allow ImportNotes/
 !ImportNotes/
 !ImportNotes/**
-EOF
 *.swp
+
+# Tooling caches
+.ruff_cache/
+.pytest_cache/
