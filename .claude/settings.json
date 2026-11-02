@@ -1,0 +1,10 @@
+{
+  "enabledPlugins": {
+    "design@anthropic-plugin-directory": false,
+    "vectorlab-ux-skills@anthropic-plugin-directory": false,
+    "ux-ui-audit@anthropic-plugin-directory": false,
+    "cowork-plugin-management@knowledge-work-plugins": false,
+    "engineering@knowledge-work-plugins": true,
+    "caveman@anthropic-plugin-directory": true
+  }
+}
