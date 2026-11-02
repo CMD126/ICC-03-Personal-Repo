@@ -6,44 +6,66 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
-- Merge duplicate `Scripts/` folders (README now next to code: `abdns`, `nmatrix`, `network-tool`)
-- Fix broken `.gitignore` (stray heredoc lines, over-broad patterns)
-- Add `docs/BACKLOG.md` Scrum backlog (one item per day)
 - Advanced exercises for Cloud Security and Networking
 
 ---
 
-## [3.1.0] — 2026
+## [3.2.0] - 2026-11-02
+
+### Changed
+- Renamed every module folder to lowercase with hyphens and a number that follows the course order (`Data Security/` is now `03-data-security/`, and so on). Paths no longer contain spaces, commas or parentheses, so they work in a terminal without quoting
+- Renamed `Scripts/` to `tools/`, and note folders to lowercase (`notes/OSI Model` is now `notes/osi-model`)
+- Rewrote the main README: a skills table that links each skill to the code behind it, a quick start, and a mapping to MITRE ATT&CK and NIST CSF 2.0
+- Replaced em dashes in the documentation with plain punctuation
+- Rewrote the pull request template: removed the issue-style front matter that GitHub showed as raw text in every PR, and added the CI checks, naming convention and authorized-testing items
+
+### Fixed
+- `abdns`, `nmatrix` and `network-tool` had their README and script in two folders that differed only in letter case, which broke links and clashes on Windows and macOS
+- `network-tool`: the IP geolocation step fed the JSON response to Python as the script itself, so it never printed. It now passes the data through an environment variable
+- `ransomware-simulator` README pointed to an old `ss/` folder and an old script name, so the screenshots did not show
+- `.gitignore` started with a leftover `cat << 'EOF'` line from the shell command that created it, and ignored `settings.py`, `*.crt`, `migrations/` and `.editorconfig` too broadly
+- `risk-assessment-tool` and `ioc-scanner` computed a severity marker but never printed it
+- Bare `except:` clauses in the ransomware simulator now catch the specific error they expect
 
 ### Added
-- `file-permissions-auditor` (Foundations) — audit Linux file permissions, find world-writable and SUID/SGID files, interactive permission decoder
-- `subnet-calculator` (Networking) — subnet info, IP class identification, CIDR range expansion, network subdivision
-- `risk-assessment-tool` (GRC) — risk register with Likelihood × Impact scoring, severity levels, response strategies, JSON persistence
-- `iam-policy-analyzer` (Cloud Security) — parse AWS IAM policy JSON, flag wildcards and dangerous permissions, includes `sample_policy.json`
-- `ioc-scanner` (Threat Hunting) — scan logs and directories for IOCs against a threat intel feed, includes `sample_iocs.txt`
+- GitHub Actions CI: ruff, pytest, ShellCheck and an offline Markdown link check
+- `tests/` with 24 tests for the log analyzer, IOC scanner, IAM analyzer, risk scoring, header grading and hash toolkit
+- `pyproject.toml` with the lint and test configuration
+- `docs/BACKLOG.md`, a Scrum backlog with one item per day
 
 ---
 
-## [3.0.0] — 2026
+## [3.1.0] - 2026
+
+### Added
+- `file-permissions-auditor` (Foundations): audit Linux file permissions, find world-writable and SUID/SGID files, interactive permission decoder
+- `subnet-calculator` (Networking): subnet info, IP class identification, CIDR range expansion, network subdivision
+- `risk-assessment-tool` (GRC): risk register with Likelihood × Impact scoring, severity levels, response strategies, JSON persistence
+- `iam-policy-analyzer` (Cloud Security): parse AWS IAM policy JSON, flag wildcards and dangerous permissions, includes `sample_policy.json`
+- `ioc-scanner` (Threat Hunting): scan logs and directories for IOCs against a threat intel feed, includes `sample_iocs.txt`
+
+---
+
+## [3.0.0] - 2026
 
 ### Changed
 - Restructured entire repository: merged separate `/Notes` and `/Exercises` directories into unified topic-based module folders at the root level
 - Each module now contains `notes/` and `exercises/` subdirectories
-- Removed `Module X - ` prefix from all folder names — folders are now named by topic only (e.g., `Data Security/`, `Penetration Testing/`)
+- Removed `Module X - ` prefix from all folder names: folders are now named by topic only (e.g., `Data Security/`, `Penetration Testing/`)
 - Updated `README.md`, `CONTRIBUTING.md` to reflect new structure
 
 ---
 
-## [2.3.0] — 2026
+## [2.3.0] - 2026
 
 ### Added
-- New script: `hash-toolkit` — menu-driven Python tool for hash identification (20+ types), generation (MD5–SHA3–BLAKE2b), file integrity checking, and constant-time hash comparison
-- New script: `recon-tool` — Bash OSINT and reconnaissance tool with 8 modules: WHOIS, DNS records, subdomain enumeration, port scanning, HTTP security headers, SSL/TLS analysis, IP geolocation, and full recon with report saving
+- New script: `hash-toolkit`: menu-driven Python tool for hash identification (20+ types), generation (MD5–SHA3–BLAKE2b), file integrity checking, and constant-time hash comparison
+- New script: `recon-tool`: Bash OSINT and reconnaissance tool with 8 modules: WHOIS, DNS records, subdomain enumeration, port scanning, HTTP security headers, SSL/TLS analysis, IP geolocation, and full recon with report saving
 
 ### Removed
-- `Scripts/basic-shell-commands/` — removed (too basic, not cybersecurity-relevant)
-- `Exercises/Module 0 - Foundations/` — hello-world and file-handler exercises removed
-- `Exercises/Module 1 - Networking and Systems Administration/` — network-tool bash exercise removed
+- `Scripts/basic-shell-commands/`: removed (too basic, not cybersecurity-relevant)
+- `Exercises/Module 0 - Foundations/`: hello-world and file-handler exercises removed
+- `Exercises/Module 1 - Networking and Systems Administration/`: network-tool bash exercise removed
 
 ### Changed
 - Network Diagnostic Tool upgraded to **v4.0**: added Listening Services, Host Discovery, HTTP Response Checker, Firewall Status; enhanced DNS (TXT + DNSSEC) and SSL (weak protocol detection); menu reorganized into 4 categories
@@ -51,7 +73,7 @@ All notable changes to this repository are documented here.
 
 ---
 
-## [2.1.0] — 2025
+## [2.1.0] - 2025
 
 ### Changed
 - Renamed all script files to combine brand identity with function description:
@@ -67,7 +89,7 @@ All notable changes to this repository are documented here.
 
 ---
 
-## [2.0.0] — 2025
+## [2.0.0] - 2025
 
 ### Added
 - Full module-based folder structure for `/Notes` (Module 0–8) with cheat sheets
@@ -100,11 +122,11 @@ All notable changes to this repository are documented here.
 - Fixed unescaped `<group>` in Linux cheat sheet
 - Fixed switches/repeaters placement in OSI Model cheat sheet
 - Reformatted Nmap README from single mega-table to sectioned layout
-- Reformatted Ubuntu shortcuts README — split combined shortcut rows
+- Reformatted Ubuntu shortcuts README: split combined shortcut rows
 
 ---
 
-## [1.0.0] — 2025-03
+## [1.0.0] - 2025-03
 
 ### Added
 - Initial repository structure with `/Scripts`, `/Exercises`, `/Notes`

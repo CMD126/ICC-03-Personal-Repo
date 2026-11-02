@@ -21,7 +21,7 @@ A clear and concise description of what you'd like to see added or improved.
 
 ## Module
 
-Which course module is this related to? (e.g. Module 4 — Security Operations)
+Which course module is this related to? (e.g. Module 4: Security Operations)
 
 ## Motivation
 

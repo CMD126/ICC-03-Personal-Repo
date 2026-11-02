@@ -1,0 +1,20 @@
+[project]
+name = "icc-03-security-toolkit"
+version = "3.2.0"
+description = "Cybersecurity notes, exercises and tools built during the ICC-03 program"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "ruff>=0.5"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "S110", "E722"]
+ignore = ["E501", "E701", "E702", "E731", "UP006", "UP035"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

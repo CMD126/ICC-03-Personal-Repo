@@ -57,34 +57,49 @@ Thank you for your interest in contributing to this repository! Contributions th
 
 ## Repository Structure
 
-New content should follow the existing structure:
+New content should follow the existing structure. Folder names are lowercase, use hyphens instead of spaces, and modules are numbered in the order the course covers them.
 
 ```
-<Topic Name>/
+NN-module-name/
 ├── notes/
-│   └── README.md              ← cheat sheet
+│   └── topic/README.md        ← cheat sheet
 └── exercises/
     └── exercise-name/
         ├── README.md          ← required
         └── script.py / script.sh
 
-Scripts/
+tools/
 └── tool-name/
     ├── README.md              ← required
     ├── tool_name.py / .sh
     └── requirements.txt       ← if external packages are used
 ```
 
-Available modules (topic folder names):
-- `Foundations/`
-- `Networking and Systems Administration/`
-- `Governance, Risk, and Compliance (GRC)/`
-- `Data Security/`
-- `Security Operations/`
-- `Cloud Security/`
-- `Threat Hunting/`
-- `Application Security and Vulnerability Analysis/`
-- `Penetration Testing/`
+Modules:
+- `00-foundations/`
+- `01-networking-and-sysadmin/`
+- `02-grc/`
+- `03-data-security/`
+- `04-security-operations/`
+- `05-cloud-security/`
+- `06-threat-hunting/`
+- `07-appsec/`
+- `08-penetration-testing/`
+
+---
+
+## Running the checks locally
+
+CI runs the same three checks on every pull request. To run them before you push:
+
+```bash
+pip install ruff pytest
+ruff check .
+pytest -q
+shellcheck -S error tools/*/*.sh
+```
+
+If you add a Python exercise with logic that can be tested without a network or a GUI, add a test for it in `tests/`.
 
 ---
 
@@ -93,6 +108,7 @@ Available modules (topic folder names):
 Before submitting a PR, make sure:
 
 - [ ] Your code runs without errors
+- [ ] `ruff check .` and `pytest -q` pass
 - [ ] A `README.md` is included for any new exercise or script
 - [ ] No sensitive data (credentials, keys, personal info) is included
 - [ ] Links in README files are correct and relative
