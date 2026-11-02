@@ -6,6 +6,9 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+- Merge duplicate `Scripts/` folders (README now next to code: `abdns`, `nmatrix`, `network-tool`)
+- Fix broken `.gitignore` (stray heredoc lines, over-broad patterns)
+- Add `docs/BACKLOG.md` Scrum backlog (one item per day)
 - Advanced exercises for Cloud Security and Networking
 
 ---
