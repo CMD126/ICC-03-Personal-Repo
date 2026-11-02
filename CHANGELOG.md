@@ -31,6 +31,9 @@ All notable changes to this repository are documented here.
 - `tests/` with 24 tests for the log analyzer, IOC scanner, IAM analyzer, risk scoring, header grading and hash toolkit
 - `pyproject.toml` with the lint and test configuration
 
+### Changed (templates)
+- Rewrote the pull request template: removed the issue-style front matter that GitHub showed as raw text in every PR, and added the CI checks, naming convention and authorized-testing items
+
 ---
 
 ## [3.1.0] - 2026
