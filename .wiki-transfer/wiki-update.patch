@@ -1,0 +1,775 @@
+From 642383d5060bdbc50d1858cce84704e0fb4cbc33 Mon Sep 17 00:00:00 2001
+From: CMD126 <131445060+CMD126@users.noreply.github.com>
+Date: Thu, 5 Nov 2026 20:28:15 +0000
+Subject: [PATCH] Update wiki for the new repo structure
+
+Point all links at the renamed folders (00-foundations to 08-penetration-testing, tools/),
+add the exercises that were missing, remove em dashes, and turn Changelog, Contributing
+and Security Policy into links to the files in the repo.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01GJjhNFejqbdMZRUM2zX2zE
+---
+ ...ion-Security-and-Vulnerability-Analysis.md |  14 +--
+ Changelog.md                                  |  54 +---------
+ Cloud-Security.md                             |  17 ++-
+ Contributing.md                               | 102 +-----------------
+ Data-Security.md                              |  12 +--
+ Foundations.md                                |  19 +++-
+ Governance,-Risk,-and-Compliance-(GRC).md     |  17 ++-
+ Home.md                                       |   6 +-
+ Networking-and-Systems-Administration.md      |  17 ++-
+ Penetration-Testing.md                        |   8 +-
+ Security-Operations.md                        |   6 +-
+ Security-Policy.md                            |  36 +------
+ Threat-Hunting.md                             |  15 ++-
+ abdns.md                                      |   4 +-
+ hash-toolkit.md                               |   8 +-
+ network-tool.md                               |   6 +-
+ nmatrix.md                                    |  10 +-
+ recon-tool.md                                 |   4 +-
+ syscript.md                                   |   4 +-
+ 19 files changed, 122 insertions(+), 237 deletions(-)
+
+diff --git a/Application-Security-and-Vulnerability-Analysis.md b/Application-Security-and-Vulnerability-Analysis.md
+index 601c80d..6cb9d7a 100644
+--- a/Application-Security-and-Vulnerability-Analysis.md
++++ b/Application-Security-and-Vulnerability-Analysis.md
+@@ -25,8 +25,8 @@ Web application security, OWASP Top 10, testing methods, and vulnerability manag
+ 
+ | Header | Purpose |
+ |--------|---------|
+-| `Strict-Transport-Security` | Forces HTTPS — prevents downgrade attacks |
+-| `Content-Security-Policy` | Restricts resource loading — prevents XSS |
++| `Strict-Transport-Security` | Forces HTTPS: prevents downgrade attacks |
++| `Content-Security-Policy` | Restricts resource loading: prevents XSS |
+ | `X-Frame-Options` | Prevents clickjacking |
+ | `X-Content-Type-Options` | Prevents MIME sniffing |
+ | `Referrer-Policy` | Controls referrer information leakage |
+@@ -36,13 +36,13 @@ Web application security, OWASP Top 10, testing methods, and vulnerability manag
+ 
+ | Method | Description |
+ |--------|-------------|
+-| SAST | Static analysis — review source code |
+-| DAST | Dynamic analysis — test running application |
+-| IAST | Combination — instrumented runtime analysis |
++| SAST | Static analysis: review source code |
++| DAST | Dynamic analysis: test running application |
++| IAST | Combination: instrumented runtime analysis |
+ | Penetration Testing | Manual exploitation by a tester |
+ | Bug Bounty | Crowdsourced vulnerability discovery |
+ 
+-→ [View full cheat sheet](../Application%20Security%20and%20Vulnerability%20Analysis/notes/README.md)
++→ [View full cheat sheet](https://github.com/CMD126/ICC-03-Personal-Repo/blob/main/07-appsec/notes/README.md)
+ 
+ ---
+ 
+@@ -59,7 +59,7 @@ Audits HTTP security headers for any URL.
+ python3 web_headers_checker.py
+ ```
+ 
+-→ [View exercise](../Application%20Security%20and%20Vulnerability%20Analysis/exercises/web-headers-checker/)
++→ [View exercise](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/07-appsec/exercises/web-headers-checker)
+ 
+ ---
+ 
+diff --git a/Changelog.md b/Changelog.md
+index 08e93fd..d498a77 100644
+--- a/Changelog.md
++++ b/Changelog.md
+@@ -1,57 +1,9 @@
+ # Changelog
+ 
+-Full version history of the ICC-03-Personal-Repo.
++I keep the version history in the repository itself, so it is always in sync with the code.
+ 
+----
+-
+-## v3.0.0 — 2026
+-
+-**Repository restructure.**
+-
+-- Merged `/Notes` and `/Exercises` into unified topic-based module folders at the root
+-- Each module now has `notes/` and `exercises/` subdirectories
+-- Removed `Module X -` prefix from all folder names
+-- Updated `README.md` and `CONTRIBUTING.md`
+-
+----
+-
+-## v2.3.0 — 2026
+-
+-**New scripts + cleanup.**
+-
+-- Added `hash-toolkit` — hash identification, generation, file integrity, comparison
+-- Added `recon-tool` — OSINT and reconnaissance automation (8 modules)
+-- Upgraded `network-tool` v3.0 → v4.0 (4 new features, menu reorganized)
+-- Removed `basic-shell-commands` (not relevant to cybersecurity)
+-- Removed Module 0 and Module 1 exercises (too basic)
+-
+----
+-
+-## v2.1.0 — 2025
+-
+-**Script renames.**
+-
+-All scripts renamed to combine tool name with function description (e.g., `net_diagnostic_tool.sh`, `nmatrix_nmap_scanner.sh`).
+-
+----
+-
+-## v2.0.0 — 2025
+-
+-**Major reorganization.**
+-
+-- Module-based folder structure for Notes and Exercises (Module 0–8)
+-- New exercises: `password-auditor`, `log-analyzer`, `port-scanner`, `web-headers-checker`
+-- New cheat sheets for all modules
+-- Added `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, issue templates, PR template
+-
+----
+-
+-## v1.0.0 — 2025-03
+-
+-**Initial release.**
+-
+-Basic repo with `/Scripts`, `/Exercises`, `/Notes`. First scripts: `syscript`, `NMATRIX`, `Network-Tool`, `ABDNS`. First notes: Linux, Ubuntu, OSI Model, Wireshark, Nmap.
++→ [Read CHANGELOG.md](https://github.com/CMD126/ICC-03-Personal-Repo/blob/main/CHANGELOG.md)
+ 
+ ---
+ 
+-→ [View full CHANGELOG.md](../CHANGELOG.md) | [← Home](Home)
++[← Home](Home)
+diff --git a/Cloud-Security.md b/Cloud-Security.md
+index 80fed09..ba973bd 100644
+--- a/Cloud-Security.md
++++ b/Cloud-Security.md
+@@ -31,7 +31,7 @@ Cloud service models, shared responsibility, IAM, and cloud-specific threats.
+ | Principal | User, role, or service requesting access |
+ | Policy | JSON document defining allowed/denied actions |
+ | Role | Temporary identity assumed by a service or user |
+-| MFA | Multi-factor authentication — always enable on root/admin |
++| MFA | Multi-factor authentication: always enable on root/admin |
+ | Least Privilege | Grant only the minimum permissions needed |
+ 
+ ### Cloud Threats
+@@ -44,13 +44,24 @@ Cloud service models, shared responsibility, IAM, and cloud-specific threats.
+ | Insecure APIs | Unauthenticated endpoints, broken object auth |
+ | Data exfiltration | Unmonitored egress, misconfigured storage |
+ 
+-→ [View full cheat sheet](../Cloud%20Security/notes/README.md)
++→ [View full cheat sheet](https://github.com/CMD126/ICC-03-Personal-Repo/blob/main/05-cloud-security/notes/README.md)
+ 
+ ---
+ 
+ ## Exercises
+ 
+-Exercises in progress.
++### iam-policy-analyzer
++Audits AWS IAM policy JSON for permissions that break least privilege.
++- Flags wildcards in `Action`, `Principal` and `Resource`, statement by statement
++- Generates a summary report of the risky statements
++- Ships with `sample_policy.json`, which has misconfigurations on purpose
++- Built-in guide to IAM policy structure
++
++```bash
++python3 iam_policy_analyzer.py
++```
++
++→ [View exercise](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/05-cloud-security/exercises/iam-policy-analyzer)
+ 
+ ---
+ 
+diff --git a/Contributing.md b/Contributing.md
+index 00ada8d..cc6d1e4 100644
+--- a/Contributing.md
++++ b/Contributing.md
+@@ -1,105 +1,11 @@
+ # Contributing
+ 
+-Thank you for your interest in contributing to this repository! Contributions that improve the educational value, fix bugs, or add useful cybersecurity exercises are welcome.
++The contribution guide (code style, folder structure and PR checklist) lives in the repository, next to the code it describes.
+ 
+----
+-
+-## Getting Started
++→ [Read CONTRIBUTING.md](https://github.com/CMD126/ICC-03-Personal-Repo/blob/main/CONTRIBUTING.md)
+ 
+-1. **Fork** the repository
+-2. **Clone** your fork locally:
+-   ```bash
+-   git clone https://github.com/your-username/ICC-03-Personal-Repo.git
+-   ```
+-3. **Create a branch** for your changes:
+-   ```bash
+-   git checkout -b feature/your-feature-name
+-   ```
+-4. **Make your changes**, following the guidelines below
+-5. **Commit** with a clear message
+-6. **Push** to your fork and open a **Pull Request**
++Quick reminder of the layout: topics are numbered folders from `00-foundations/` to `08-penetration-testing/`, each with `notes/` and `exercises/`, and standalone tools go in `tools/`.
+ 
+ ---
+ 
+-## What to Contribute
+-
+-| Type | Welcome? | Notes |
+-|------|----------|-------|
+-| Bug fixes | Yes | Fix broken scripts, incorrect commands, or bad links |
+-| New exercises | Yes | Must follow the module structure and include a README |
+-| New cheat sheet notes | Yes | Must be accurate and well-formatted |
+-| New scripts/tools | Yes | Must include a README with usage instructions |
+-| Spelling/grammar fixes | Yes | Always appreciated |
+-| Security improvements | Yes | Safer practices in existing code |
+-| Malicious code | No | Any harmful or unethical content will be rejected |
+-
+----
+-
+-## Code Style
+-
+-### Python
+-- Use **snake_case** for file and variable names
+-- Add a module docstring at the top of every script explaining its purpose
+-- Use `try/except` for error handling at I/O boundaries
+-- No hardcoded credentials or sensitive data
+-
+-### Bash
+-- Use `#!/bin/bash` shebang
+-- Quote all variables: `"$variable"`
+-- Use `[[ ]]` for conditionals in Bash (not `[ ]`)
+-
+-### Markdown
+-- Use `##` sections with `---` dividers between them
+-- Use tables for structured information
+-- Add a blank line between headings and content
+-
+----
+-
+-## Repository Structure
+-
+-New content should follow the existing structure:
+-
+-```
+-<Topic Name>/
+-├── notes/
+-│   └── README.md              ← cheat sheet
+-└── exercises/
+-    └── exercise-name/
+-        ├── README.md          ← required
+-        └── script.py / script.sh
+-
+-Scripts/
+-└── tool-name/
+-    ├── README.md              ← required
+-    ├── tool_name.py / .sh
+-    └── requirements.txt       ← if external packages are used
+-```
+-
+-Available modules (topic folder names):
+-- `Foundations/`
+-- `Networking and Systems Administration/`
+-- `Governance, Risk, and Compliance (GRC)/`
+-- `Data Security/`
+-- `Security Operations/`
+-- `Cloud Security/`
+-- `Threat Hunting/`
+-- `Application Security and Vulnerability Analysis/`
+-- `Penetration Testing/`
+-
+----
+-
+-## Pull Request Checklist
+-
+-Before submitting a PR, make sure:
+-
+-- [ ] Your code runs without errors
+-- [ ] A `README.md` is included for any new exercise or script
+-- [ ] No sensitive data (credentials, keys, personal info) is included
+-- [ ] Links in README files are correct and relative
+-- [ ] Commit messages are clear and descriptive
+-
+----
+-
+-## Code of Conduct
+-
+-All contributors are expected to follow the [Code of Conduct](./CODE_OF_CONDUCT.md).
++[← Home](Home)
+diff --git a/Data-Security.md b/Data-Security.md
+index 7cbfb98..fd2cbfc 100644
+--- a/Data-Security.md
++++ b/Data-Security.md
+@@ -18,7 +18,7 @@ Encryption, hashing, key management, and data protection techniques.
+ 
+ | Algorithm | Length | Use |
+ |-----------|--------|-----|
+-| MD5 | 128-bit | Legacy only — broken |
++| MD5 | 128-bit | Legacy only: broken |
+ | SHA-1 | 160-bit | Deprecated |
+ | SHA-256 | 256-bit | General purpose |
+ | SHA-512 | 512-bit | High security |
+@@ -34,7 +34,7 @@ Encryption, hashing, key management, and data protection techniques.
+ | Confidential | Limited access, business-sensitive |
+ | Restricted | Highly sensitive, legal/regulatory requirements |
+ 
+-→ [View full cheat sheet](../Data%20Security/notes/README.md)
++→ [View full cheat sheet](https://github.com/CMD126/ICC-03-Personal-Repo/blob/main/03-data-security/notes/README.md)
+ 
+ ---
+ 
+@@ -48,7 +48,7 @@ Python GUI app for file and message encryption/decryption.
+ - Cipher: Fernet (AES-128-CBC)
+ - Supports large files with chunked I/O
+ 
+-→ [View exercise](../Data%20Security/exercises/file-encryptor/)
++→ [View exercise](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/03-data-security/exercises/file-encryptor)
+ 
+ ### password-auditor
+ Demonstrates why weak hashing is dangerous.
+@@ -56,15 +56,15 @@ Demonstrates why weak hashing is dangerous.
+ - Shows salting in practice
+ - Simulates a dictionary attack
+ 
+-→ [View exercise](../Data%20Security/exercises/password-auditor/)
++→ [View exercise](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/03-data-security/exercises/password-auditor)
+ 
+ ### ransomware-simulator ⚠️
+-Educational ransomware simulation — VM only.
++Educational ransomware simulation: VM only.
+ - Encrypts files in a target directory
+ - Generates a ransom wallpaper
+ - Fullscreen popup with decrypt key input
+ 
+-→ [View exercise](../Data%20Security/exercises/ransomware-simulator/)
++→ [View exercise](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/03-data-security/exercises/ransomware-simulator)
+ 
+ ---
+ 
+diff --git a/Foundations.md b/Foundations.md
+index 85a9462..fc16a38 100644
+--- a/Foundations.md
++++ b/Foundations.md
+@@ -1,6 +1,6 @@
+ # Foundations
+ 
+-Core Linux and Ubuntu knowledge — the base for everything else in cybersecurity.
++Core Linux and Ubuntu knowledge: the base for everything else in cybersecurity.
+ 
+ ---
+ 
+@@ -18,7 +18,7 @@ Key Linux command-line concepts for system administration and security work.
+ | Networking | `ip`, `ss`, `ping`, `curl`, `netstat` |
+ | Package management | `apt`, `dpkg` |
+ 
+-→ [View full cheat sheet](../Foundations/notes/Linux/README.md)
++→ [View full cheat sheet](https://github.com/CMD126/ICC-03-Personal-Repo/blob/main/00-foundations/notes/linux/README.md)
+ 
+ ### Ubuntu
+ Keyboard shortcuts and productivity tips for Ubuntu desktop.
+@@ -30,13 +30,24 @@ Keyboard shortcuts and productivity tips for Ubuntu desktop.
+ | Terminal | Ctrl+Alt+T |
+ | Screenshots | Print Screen, Shift+Print Screen |
+ 
+-→ [View full cheat sheet](../Foundations/notes/Ubuntu/README.md)
++→ [View full cheat sheet](https://github.com/CMD126/ICC-03-Personal-Repo/blob/main/00-foundations/notes/ubuntu/README.md)
+ 
+ ---
+ 
+ ## Exercises
+ 
+-No exercises for this module — foundational content is covered in the notes above.
++### file-permissions-auditor
++Python tool I wrote to understand Linux permissions and how bad ones lead to privilege escalation.
++- Audits a directory and shows permissions, type and owner of every file
++- Finds world-writable files
++- Finds SUID and SGID binaries
++- Interactive decoder for octal and symbolic notation
++
++```bash
++python3 file_permissions_auditor.py
++```
++
++→ [View exercise](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/00-foundations/exercises/file-permissions-auditor)
+ 
+ ---
+ 
+diff --git a/Governance,-Risk,-and-Compliance-(GRC).md b/Governance,-Risk,-and-Compliance-(GRC).md
+index cf8e077..8f8f88c 100644
+--- a/Governance,-Risk,-and-Compliance-(GRC).md
++++ b/Governance,-Risk,-and-Compliance-(GRC).md
+@@ -31,18 +31,29 @@ Frameworks, risk management processes, and compliance concepts used in cybersecu
+ 
+ | Strategy | Description |
+ |----------|-------------|
+-| Accept | Risk within tolerance — do nothing |
++| Accept | Risk within tolerance: do nothing |
+ | Mitigate | Apply controls to reduce risk |
+ | Transfer | Insurance, outsourcing |
+ | Avoid | Eliminate the activity causing the risk |
+ 
+-→ [View full cheat sheet](../Governance%2C%20Risk%2C%20and%20Compliance%20(GRC)/notes/README.md)
++→ [View full cheat sheet](https://github.com/CMD126/ICC-03-Personal-Repo/blob/main/02-grc/notes/README.md)
+ 
+ ---
+ 
+ ## Exercises
+ 
+-Exercises in progress.
++### risk-assessment-tool
++A small risk register I built to practice the Likelihood × Impact method.
++- Add risks with asset, threat, vulnerability, likelihood and impact (1 to 5)
++- Score and severity are calculated automatically
++- Register sorted by score, saved to `risk_register.json` between runs
++- 5×5 risk matrix with response guidance
++
++```bash
++python3 risk_assessment_tool.py
++```
++
++→ [View exercise](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/02-grc/exercises/risk-assessment-tool)
+ 
+ ---
+ 
+diff --git a/Home.md b/Home.md
+index 780dd25..251de0b 100644
+--- a/Home.md
++++ b/Home.md
+@@ -1,4 +1,6 @@
+-# ICC-03 Personal Repo — Wiki
++# ICC-03 Personal Repo Wiki
++
++This wiki is a quick tour of my ICC-03 cybersecurity work: one page per module with the key notes and the exercises I built, and one page per tool. The code itself lives in the [repository](https://github.com/CMD126/ICC-03-Personal-Repo).
+ 
+ ---
+ 
+@@ -16,7 +18,7 @@
+ 
+ ---
+ 
+-## Scripts
++## Tools
+ 
+ - [[syscript]]
+ - [[nmatrix]]
+diff --git a/Networking-and-Systems-Administration.md b/Networking-and-Systems-Administration.md
+index b65db50..6a6bb78 100644
+--- a/Networking-and-Systems-Administration.md
++++ b/Networking-and-Systems-Administration.md
+@@ -19,7 +19,7 @@ The 7-layer model used to understand how data travels across a network.
+ | 2 | Data Link | Ethernet, MAC, switches |
+ | 1 | Physical | Cables, hubs, repeaters |
+ 
+-→ [View full cheat sheet](../Networking%20and%20Systems%20Administration/notes/OSI%20Model/README.md)
++→ [View full cheat sheet](https://github.com/CMD126/ICC-03-Personal-Repo/blob/main/01-networking-and-sysadmin/notes/osi-model/README.md)
+ 
+ ### Wireshark
+ Network packet capture and analysis.
+@@ -31,13 +31,24 @@ Network packet capture and analysis.
+ | Protocol analysis | TCP handshake, HTTP requests, DNS queries |
+ | TLS inspection | Requires session key log |
+ 
+-→ [View full cheat sheet](../Networking%20and%20Systems%20Administration/notes/Wireshark/README.md)
++→ [View full cheat sheet](https://github.com/CMD126/ICC-03-Personal-Repo/blob/main/01-networking-and-sysadmin/notes/wireshark/README.md)
+ 
+ ---
+ 
+ ## Exercises
+ 
+-No exercises for this module currently.
++### subnet-calculator
++IPv4 subnetting practice built on Python's `ipaddress` module.
++- Full breakdown of a network: network and broadcast address, mask, wildcard, host range
++- Identifies the IP class and whether it is private, public, loopback or multicast
++- Lists every address in a CIDR range (up to /24)
++- Splits a network into N equal subnets
++
++```bash
++python3 subnet_calculator.py
++```
++
++→ [View exercise](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/01-networking-and-sysadmin/exercises/subnet-calculator)
+ 
+ ---
+ 
+diff --git a/Penetration-Testing.md b/Penetration-Testing.md
+index 312ac72..e989b8a 100644
+--- a/Penetration-Testing.md
++++ b/Penetration-Testing.md
+@@ -16,9 +16,9 @@ Offensive security techniques, Nmap scanning, and hands-on exploitation exercise
+ | OS detection | `nmap -O <target>` | Requires root |
+ | Script scan | `nmap -sC <target>` | Default NSE scripts |
+ | Vulnerability | `nmap --script vuln <target>` | Known CVEs |
+-| UDP | `nmap -sU <target>` | Slow — top UDP ports |
++| UDP | `nmap -sU <target>` | Slow: top UDP ports |
+ | Ping sweep | `nmap -sn <subnet>` | Host discovery only |
+-| SYN scan | `nmap -sS <target>` | Stealth — requires root |
++| SYN scan | `nmap -sS <target>` | Stealth: requires root |
+ 
+ ### Nmap Output Formats
+ 
+@@ -39,7 +39,7 @@ Offensive security techniques, Nmap scanning, and hands-on exploitation exercise
+ | Post-Exploitation | Privilege escalation, lateral movement |
+ | Reporting | Document findings and remediations |
+ 
+-→ [View full Nmap cheat sheet](../Penetration%20Testing/notes/Nmap/README.md)
++→ [View full Nmap cheat sheet](https://github.com/CMD126/ICC-03-Personal-Repo/blob/main/08-penetration-testing/notes/nmap/README.md)
+ 
+ ---
+ 
+@@ -56,7 +56,7 @@ TCP connect scanner built with raw Python sockets.
+ python3 port_scanner.py
+ ```
+ 
+-→ [View exercise](../Penetration%20Testing/exercises/port-scanner/)
++→ [View exercise](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/08-penetration-testing/exercises/port-scanner)
+ 
+ ---
+ 
+diff --git a/Security-Operations.md b/Security-Operations.md
+index 10d4d1b..90dff79 100644
+--- a/Security-Operations.md
++++ b/Security-Operations.md
+@@ -30,7 +30,7 @@ SOC workflows, SIEM, incident response, and log analysis.
+ 
+ | Level | Response |
+ |-------|---------|
+-| Critical | Immediate response — active breach |
++| Critical | Immediate response: active breach |
+ | High | Respond within 1 hour |
+ | Medium | Respond within 24 hours |
+ | Low | Review within 72 hours |
+@@ -46,7 +46,7 @@ SOC workflows, SIEM, incident response, and log analysis.
+ | Firewall logs | Allow/deny decisions, port traffic |
+ | Web server logs | HTTP requests, status codes, IPs |
+ 
+-→ [View full cheat sheet](../Security%20Operations/notes/README.md)
++→ [View full cheat sheet](https://github.com/CMD126/ICC-03-Personal-Repo/blob/main/04-security-operations/notes/README.md)
+ 
+ ---
+ 
+@@ -59,7 +59,7 @@ Parses SSH `auth.log` to detect security events.
+ - Detects invalid username enumeration
+ - Outputs a formatted SOC-style security report
+ 
+-→ [View exercise](../Security%20Operations/exercises/log-analyzer/)
++→ [View exercise](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/04-security-operations/exercises/log-analyzer)
+ 
+ ---
+ 
+diff --git a/Security-Policy.md b/Security-Policy.md
+index 04efde3..ebfdec2 100644
+--- a/Security-Policy.md
++++ b/Security-Policy.md
+@@ -1,39 +1,9 @@
+ # Security Policy
+ 
+----
+-
+-## Responsible Use
+-
+-This repository contains educational cybersecurity tools and simulations. All content is intended strictly for:
+-
+-- Learning in controlled environments
+-- Authorized penetration testing
+-- CTF (Capture the Flag) competitions
+-- Personal lab environments you own
+-
+-**Never use these tools against systems you do not own or have explicit written permission to test. Unauthorized scanning or exploitation may be illegal in your jurisdiction.**
+-
+----
+-
+-## Sensitive Scripts
+-
+-| Script | Risk Level | Requirement |
+-|--------|-----------|-------------|
+-| `ransomware-simulator` | High | Run only in an isolated VM — never on a real system |
+-| `recon-tool` | Medium | Only target domains/IPs you own or have permission to scan |
+-| `nmatrix` / `network-tool` | Low-Medium | Avoid scanning external targets without authorization |
+-| `port-scanner` | Medium | Only test systems you have explicit permission to scan |
+-
+----
+-
+-## Reporting a Vulnerability
+-
+-If you find a security issue in this repository (e.g., a script that could cause unintended harm):
++If you find a vulnerability in any of my scripts, please follow the process described in the repository.
+ 
+-1. **Do not open a public GitHub issue**
+-2. Contact the repository owner directly via GitHub
+-3. Provide a clear description of the issue and potential impact
++→ [Read SECURITY.md](https://github.com/CMD126/ICC-03-Personal-Repo/blob/main/SECURITY.md)
+ 
+ ---
+ 
+-→ [View full SECURITY.md](../SECURITY.md) | [← Home](Home)
++[← Home](Home)
+diff --git a/Threat-Hunting.md b/Threat-Hunting.md
+index 8834a5b..1f4f35f 100644
+--- a/Threat-Hunting.md
++++ b/Threat-Hunting.md
+@@ -45,13 +45,24 @@ Proactive threat detection using MITRE ATT&CK, threat intelligence, and behavior
+ | Tools | TTP | Challenging |
+ | TTPs | Behavior | Tough |
+ 
+-→ [View full cheat sheet](../Threat%20Hunting/notes/README.md)
++→ [View full cheat sheet](https://github.com/CMD126/ICC-03-Personal-Repo/blob/main/06-threat-hunting/notes/README.md)
+ 
+ ---
+ 
+ ## Exercises
+ 
+-Exercises in progress.
++### ioc-scanner
++Scans logs and files for known IOCs (IPs, domains and hashes).
++- Scans one log file, a whole directory, or pasted text
++- Hashes a file (MD5, SHA-1, SHA-256) and checks it against the IOC list
++- Loads `sample_iocs.txt` on startup, or your own feed in the same format
++- Built-in guide to IOC types and the Pyramid of Pain
++
++```bash
++python3 ioc_scanner.py
++```
++
++→ [View exercise](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/06-threat-hunting/exercises/ioc-scanner)
+ 
+ ---
+ 
+diff --git a/abdns.md b/abdns.md
+index 1e76991..9a460fb 100644
+--- a/abdns.md
++++ b/abdns.md
+@@ -10,7 +10,7 @@ Python tool that benchmarks public DNS providers and optionally applies the fast
+ - Reports response time, packet loss, and jitter per provider
+ - Ranks providers by speed
+ - Applies the fastest primary + secondary DNS on Linux, macOS, or Windows
+-- No external dependencies — pure Python stdlib
++- No external dependencies: pure Python stdlib
+ 
+ ### DNS Providers Tested
+ 
+@@ -51,4 +51,4 @@ sudo python3 abdns_dns_benchmark.py --apply
+ 
+ ---
+ 
+-→ [View source](../Scripts/abdns/) | [← Home](Home)
++→ [View source](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/tools/abdns) | [← Home](Home)
+diff --git a/hash-toolkit.md b/hash-toolkit.md
+index baf3639..90e26f1 100644
+--- a/hash-toolkit.md
++++ b/hash-toolkit.md
+@@ -1,4 +1,4 @@
+-# hash-toolkit — v1.0
++# hash-toolkit v1.0
+ 
+ Menu-driven Python utility for hash identification, generation, comparison, and file integrity verification. No external dependencies.
+ 
+@@ -8,7 +8,7 @@ Menu-driven Python utility for hash identification, generation, comparison, and
+ 
+ | # | Option | Description |
+ |---|--------|-------------|
+-| 1 | Identify Hash Type | Detects algorithm by format and length — supports 20+ types |
++| 1 | Identify Hash Type | Detects algorithm by format and length: supports 20+ types |
+ | 2 | Generate Hash | Hashes any string with 9 algorithms; optional salt support |
+ | 3 | File Integrity Checker | Generate checksums for a file, or verify against a known hash |
+ | 4 | Compare Two Hashes | Constant-time comparison with mismatch character count |
+@@ -50,9 +50,9 @@ No root required. No external packages needed.
+ 
+ ## Security Notes
+ 
+-- Hash comparison uses `hmac.compare_digest` — safe against timing-based side-channel attacks.
++- Hash comparison uses `hmac.compare_digest`: safe against timing-based side-channel attacks.
+ - File integrity auto-detects algorithm from known hash length.
+ 
+ ---
+ 
+-→ [View source](../Scripts/hash-toolkit/) | [← Home](Home)
++→ [View source](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/tools/hash-toolkit) | [← Home](Home)
+diff --git a/network-tool.md b/network-tool.md
+index 537e5e9..00c5a2f 100644
+--- a/network-tool.md
++++ b/network-tool.md
+@@ -1,4 +1,4 @@
+-# network-tool — v4.0
++# network-tool v4.0
+ 
+ Comprehensive Bash network diagnostic, security analysis, and monitoring tool with 16 options across 4 categories.
+ 
+@@ -28,7 +28,7 @@ Comprehensive Bash network diagnostic, security analysis, and monitoring tool wi
+ | 9 | DNS Resolution | A/AAAA/MX/NS/TXT lookups + DNSSEC detection |
+ | 10 | SSL Certificate | Cert subject/issuer/expiry, fingerprint, cipher, weak TLS detection |
+ | 11 | HTTP Response | Status code, redirect chain, timing, OWASP header audit |
+-| 12 | Firewall Status | UFW, firewalld, iptables, nftables — whichever is installed |
++| 12 | Firewall Status | UFW, firewalld, iptables, nftables: whichever is installed |
+ 
+ ### Information & Monitoring
+ | # | Option | Description |
+@@ -60,4 +60,4 @@ sudo ./net_diagnostic_tool.sh
+ 
+ ---
+ 
+-→ [View source](../Scripts/network-tool/) | [← Home](Home)
++→ [View source](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/tools/network-tool) | [← Home](Home)
+diff --git a/nmatrix.md b/nmatrix.md
+index 8fd5cbc..2c09f9d 100644
+--- a/nmatrix.md
++++ b/nmatrix.md
+@@ -1,4 +1,4 @@
+-# nmatrix — v2.0
++# nmatrix v2.0
+ 
+ Matrix-style, menu-driven Nmap frontend with scan logging and file export.
+ 
+@@ -11,8 +11,8 @@ Matrix-style, menu-driven Nmap frontend with scan logging and file export.
+ | 1 | Quick Scan | Fast scan of top 100 ports (`-T4 -F`) |
+ | 2 | Full TCP Scan | All 65535 ports (`-p-`) |
+ | 3 | Service + Script | Version detection and default NSE scripts (`-sV -sC`) |
+-| 4 | OS Detection | Operating system fingerprinting (`-O`) — requires root |
+-| 5 | UDP Scan | Top UDP ports (`-sU`) — requires root |
++| 4 | OS Detection | Operating system fingerprinting (`-O`): requires root |
++| 5 | UDP Scan | Top UDP ports (`-sU`): requires root |
+ | 6 | Ping Sweep | Host discovery on a subnet (`-sn`) |
+ | 7 | Vulnerability Scan | Known CVE checks (`--script vuln`) |
+ | 8 | Custom Scan | Enter any custom Nmap flags |
+@@ -36,8 +36,8 @@ sudo ./nmatrix_nmap_scanner.sh
+ | Tool | Used for |
+ |------|----------|
+ | `bash 4+` | Required |
+-| `nmap` | Required — all scans |
++| `nmap` | Required: all scans |
+ 
+ ---
+ 
+-→ [View source](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/Scripts/NMATRIX) | [← Home](Home)
++→ [View source](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/tools/nmatrix) | [← Home](Home)
+diff --git a/recon-tool.md b/recon-tool.md
+index f3236de..80461d2 100644
+--- a/recon-tool.md
++++ b/recon-tool.md
+@@ -1,4 +1,4 @@
+-# recon-tool — v1.0
++# recon-tool v1.0
+ 
+ Automated Bash OSINT and reconnaissance tool for domains and IP addresses. All modules run from a single menu and degrade gracefully if optional tools are missing.
+ 
+@@ -58,4 +58,4 @@ sudo apt install whois dnsutils nmap openssl curl
+ 
+ ---
+ 
+-→ [View source](../Scripts/recon-tool/) | [← Home](Home)
++→ [View source](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/tools/recon-tool) | [← Home](Home)
+diff --git a/syscript.md b/syscript.md
+index 4f86e34..6960146 100644
+--- a/syscript.md
++++ b/syscript.md
+@@ -1,4 +1,4 @@
+-# syscript — v2.0
++# syscript v2.0
+ 
+ Menu-driven Bash toolkit for Ubuntu/Debian system administration.
+ 
+@@ -41,4 +41,4 @@ sudo ./syscript_sysadmin.sh
+ 
+ ---
+ 
+-→ [View source](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/Scripts/syscript) | [← Home](Home)
++→ [View source](https://github.com/CMD126/ICC-03-Personal-Repo/tree/main/tools/syscript) | [← Home](Home)
+-- 
+2.43.0
+
