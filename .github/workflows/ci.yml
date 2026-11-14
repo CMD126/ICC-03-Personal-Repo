@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install ruff pytest
+      - run: pip install ruff pytest -r 03-data-security/exercises/ransomware-simulator/requirements.txt
       - run: ruff check .
       - run: pytest -q
 
