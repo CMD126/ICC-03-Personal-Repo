@@ -64,17 +64,38 @@ def resolve_host(target: str) -> str | None:
 
 
 def grab_banner(host: str, port: int) -> str:
-    """Attempt to read a service banner from an open port."""
+    """
+    Read a service banner from an open port.
+
+    Many services (SSH, FTP, SMTP, MySQL...) greet the client first, so the
+    scanner listens before sending anything. Only if the service stays quiet
+    does it send a minimal HTTP request, which most web servers answer.
+    """
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.settimeout(TIMEOUT)
             s.connect((host, port))
-            # Send a generic HTTP request — works for HTTP/HTTPS/many services
-            s.send(b"HEAD / HTTP/1.0\r\nHost: target\r\n\r\n")
-            banner = s.recv(256).decode(errors="ignore").strip()
-            return banner.split("\n")[0][:70] if banner else ""
-    except Exception:
+            s.settimeout(TIMEOUT / 2)  # short wait for a greeting
+            try:
+                data = s.recv(256)
+            except TimeoutError:
+                data = b""
+            s.settimeout(TIMEOUT)
+            if not data:
+                s.sendall(f"HEAD / HTTP/1.0\r\nHost: {host}\r\n\r\n".encode())
+                data = s.recv(256)
+    except OSError:
         return ""
+    banner = data.decode(errors="ignore").strip()
+    return banner.splitlines()[0][:70] if banner else ""
+
+
+def parse_port_range(start: str, end: str) -> list:
+    """Turn user input into a list of ports. Raises ValueError if invalid."""
+    start_port, end_port = int(start), int(end)
+    if not 1 <= start_port <= end_port <= 65535:
+        raise ValueError("ports must satisfy 1 <= start <= end <= 65535")
+    return list(range(start_port, end_port + 1))
 
 
 def scan_port(host: str, port: int) -> dict | None:
@@ -159,14 +180,9 @@ def main():
         ports = list(range(1, 1025))
     elif scan_choice == "3":
         try:
-            start_port = int(input("  Start port: ").strip())
-            end_port   = int(input("  End port  : ").strip())
-            if not (1 <= start_port <= end_port <= 65535):
-                print("  [!] Invalid port range.")
-                return
-            ports = list(range(start_port, end_port + 1))
+            ports = parse_port_range(input("  Start port: ").strip(), input("  End port  : ").strip())
         except ValueError:
-            print("  [!] Ports must be integers.")
+            print("  [!] Invalid port range (integers, 1-65535, start <= end).")
             return
     else:
         print("  [!] Invalid option.")

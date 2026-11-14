@@ -14,7 +14,7 @@ A Python TCP port scanner built from scratch using raw sockets and multithreadin
 |---------|-------------|
 | TCP connect scan | Attempts a full TCP handshake to determine if a port is open |
 | Service mapping | Identifies 20 common services by port number |
-| Banner grabbing | Reads the first response from open ports to identify service versions |
+| Banner grabbing | Waits for services that greet first (SSH, FTP, SMTP), otherwise sends a minimal HTTP probe, and shows the first line of the reply |
 | Multithreaded | Uses a thread pool for fast parallel scanning |
 | Flexible targets | Accepts hostnames or IP addresses; resolves DNS automatically |
 | Three scan modes | Common ports, full 1–1024 sweep, or custom range |
