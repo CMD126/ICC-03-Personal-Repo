@@ -33,25 +33,29 @@ WORDLIST = [
 ]
 
 
+ALGORITHMS = ("md5", "sha1", "sha256", "sha512")
+
+
 def hash_password(password: str, algorithm: str, salt: bytes = None) -> tuple:
-    """Hash a password using the specified algorithm, with optional salt."""
+    """
+    Hash a password with the given algorithm, with an optional salt prepended.
+    Returns (hex_digest, salt). Raises ValueError for an unknown algorithm.
+    """
+    if algorithm not in ALGORITHMS:
+        raise ValueError(f"unknown algorithm: {algorithm}")
     data = password.encode()
     if salt:
         data = salt + data
+    return hashlib.new(algorithm, data).hexdigest(), salt
 
-    if algorithm == "md5":
-        digest = hashlib.md5(data).hexdigest()
-    elif algorithm == "sha1":
-        digest = hashlib.sha1(data).hexdigest()
-    elif algorithm == "sha256":
-        digest = hashlib.sha256(data).hexdigest()
-    elif algorithm == "sha512":
-        digest = hashlib.sha512(data).hexdigest()
-    else:
-        print(f"[!] Unknown algorithm: {algorithm}")
-        return None, salt
 
-    return digest, salt
+def dictionary_attack(target_hash: str, algorithm: str, wordlist=WORDLIST) -> str | None:
+    """Return the word whose unsalted hash matches target_hash, or None."""
+    target_hash = target_hash.strip().lower()
+    for word in wordlist:
+        if hash_password(word, algorithm)[0] == target_hash:
+            return word
+    return None
 
 
 def menu_hash_password():
@@ -63,7 +67,7 @@ def menu_hash_password():
 
     print(f"\n  {'Algorithm':<10} {'Hash'}")
     print("  " + "-" * 80)
-    for algo in ["md5", "sha1", "sha256", "sha512"]:
+    for algo in ALGORITHMS:
         digest, _ = hash_password(password, algo)
         print(f"  {algo.upper():<10} {digest}")
 
@@ -96,7 +100,7 @@ def menu_dictionary_attack():
     """Simulate a dictionary attack against an unsalted hash."""
     print("\n  Available algorithms: md5 / sha1 / sha256 / sha512")
     algorithm = input("  Algorithm used: ").strip().lower()
-    if algorithm not in ("md5", "sha1", "sha256", "sha512"):
+    if algorithm not in ALGORITHMS:
         print("[!] Invalid algorithm.")
         return
 
@@ -107,14 +111,7 @@ def menu_dictionary_attack():
 
     print(f"\n  [*] Running dictionary attack ({len(WORDLIST)} words)...\n")
     start = time.time()
-    found = None
-
-    for word in WORDLIST:
-        candidate, _ = hash_password(word, algorithm)
-        if candidate == target_hash:
-            found = word
-            break
-
+    found = dictionary_attack(target_hash, algorithm)
     elapsed = time.time() - start
 
     if found:
@@ -143,7 +140,7 @@ def menu_compare_speed():
 
     print(f"\n  Hashing '{password}' {iterations:,} times per algorithm...\n")
 
-    for algo in ["md5", "sha1", "sha256", "sha512"]:
+    for algo in ALGORITHMS:
         start = time.time()
         for _ in range(iterations):
             hash_password(password, algo)
