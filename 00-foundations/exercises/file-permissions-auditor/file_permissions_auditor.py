@@ -17,14 +17,24 @@ BANNER = """
 """
 
 def format_permissions(mode):
-    """Convert numeric mode to rwxrwxrwx string."""
+    """
+    Convert a numeric mode to an ls-style rwxrwxrwx string, including the
+    special bits: s/S for SUID and SGID, t/T for the sticky bit (uppercase
+    when the matching execute bit is not set).
+    """
+    triplets = [
+        (stat.S_IRUSR, stat.S_IWUSR, stat.S_IXUSR, stat.S_ISUID, "s"),
+        (stat.S_IRGRP, stat.S_IWGRP, stat.S_IXGRP, stat.S_ISGID, "s"),
+        (stat.S_IROTH, stat.S_IWOTH, stat.S_IXOTH, stat.S_ISVTX, "t"),
+    ]
     perms = ""
-    for who in [(stat.S_IRUSR, stat.S_IWUSR, stat.S_IXUSR),
-                (stat.S_IRGRP, stat.S_IWGRP, stat.S_IXGRP),
-                (stat.S_IROTH, stat.S_IWOTH, stat.S_IXOTH)]:
-        perms += "r" if mode & who[0] else "-"
-        perms += "w" if mode & who[1] else "-"
-        perms += "x" if mode & who[2] else "-"
+    for read, write, execute, special, letter in triplets:
+        perms += "r" if mode & read else "-"
+        perms += "w" if mode & write else "-"
+        if mode & special:
+            perms += letter if mode & execute else letter.upper()
+        else:
+            perms += "x" if mode & execute else "-"
     return perms
 
 def get_owner(st):
@@ -51,6 +61,30 @@ def scan_directory(path):
                 yield fpath, st
             except (PermissionError, FileNotFoundError):
                 continue
+
+def world_writable_files(path):
+    """
+    Return [(filepath, stat_result)] for regular files any user can modify.
+
+    Symlinks are skipped: on Linux they always show as rwxrwxrwx, but that
+    mode is never used for access checks, so listing them is a false positive.
+    """
+    return [(fpath, st) for fpath, st in scan_directory(path)
+            if stat.S_ISREG(st.st_mode) and st.st_mode & stat.S_IWOTH]
+
+
+def suid_sgid_files(path):
+    """Return two lists of (filepath, stat_result): SUID files and SGID files."""
+    suid, sgid = [], []
+    for fpath, st in scan_directory(path):
+        if not stat.S_ISREG(st.st_mode):
+            continue
+        if st.st_mode & stat.S_ISUID:
+            suid.append((fpath, st))
+        if st.st_mode & stat.S_ISGID:
+            sgid.append((fpath, st))
+    return suid, sgid
+
 
 def audit_directory():
     """Full permission audit of a directory — show all files with permissions."""
@@ -87,10 +121,8 @@ def find_world_writable():
     print(f"\n[*] Scanning for world-writable files in: {os.path.abspath(path)}\n")
     print("  [!] World-writable files can be modified by ANY user — potential security risk.\n")
 
-    found = []
-    for fpath, st in scan_directory(path):
-        if st.st_mode & stat.S_IWOTH:
-            found.append((fpath, format_permissions(st.st_mode), get_owner(st)))
+    found = [(fpath, format_permissions(st.st_mode), get_owner(st))
+             for fpath, st in world_writable_files(path)]
 
     if found:
         print(f"  {'Permissions':<12} {'Owner':<20} {'File'}")
@@ -112,14 +144,9 @@ def find_suid_sgid():
     print("  [!] SUID files run with the file owner's privileges (often root).")
     print("  [!] These are common privilege escalation targets.\n")
 
-    suid_files = []
-    sgid_files = []
-    for fpath, st in scan_directory(path):
-        mode = st.st_mode
-        if mode & stat.S_ISUID:
-            suid_files.append((fpath, format_permissions(mode), get_owner(st)))
-        if mode & stat.S_ISGID:
-            sgid_files.append((fpath, format_permissions(mode), get_owner(st)))
+    suid, sgid = suid_sgid_files(path)
+    suid_files = [(fpath, format_permissions(st.st_mode), get_owner(st)) for fpath, st in suid]
+    sgid_files = [(fpath, format_permissions(st.st_mode), get_owner(st)) for fpath, st in sgid]
 
     if suid_files:
         print("  SUID Files (run as file owner):")
@@ -180,6 +207,8 @@ def explain_permissions():
     demo = input("  [?] Enter an octal permission number to decode (e.g. 755): ").strip()
     try:
         mode = int(demo, 8)
+        if not 0 <= mode <= 0o7777:
+            raise ValueError
         print(f"\n  {demo:>4} octal  →  {format_permissions(mode)}")
         print(f"         Owner : {'r' if mode&0o400 else '-'}{'w' if mode&0o200 else '-'}{'x' if mode&0o100 else '-'}")
         print(f"         Group : {'r' if mode&0o040 else '-'}{'w' if mode&0o020 else '-'}{'x' if mode&0o010 else '-'}")
