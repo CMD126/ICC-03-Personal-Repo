@@ -5,6 +5,15 @@
 ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Bash](https://img.shields.io/badge/shell-bash-green)
 
+**In short:** 13 Python and 4 Bash security tools I wrote from scratch during the ICC-03 cybersecurity program, covering detection (SOC), threat hunting, cloud and web security, cryptography and recon. Every push is checked by CI: linting, 190+ offline tests and ShellCheck.
+
+**Highlights**
+
+- **[log-analyzer](./04-security-operations/exercises/log-analyzer/)**: reads a Linux SSH `auth.log` and reports brute force sources, successful logins and username enumeration, SOC style.
+- **[iam-policy-analyzer](./05-cloud-security/exercises/iam-policy-analyzer/)**: reviews AWS IAM policies for public principals, wildcard resources and risky actions such as `iam:PassRole` or `iam:CreateAccessKey`.
+- **[ioc-scanner](./06-threat-hunting/exercises/ioc-scanner/)**: hunts for known-bad IPs, domains and MD5/SHA-1/SHA-256 file hashes across logs and folders.
+- **[ransomware-simulator](./03-data-security/exercises/ransomware-simulator/)**: emulates ransomware (file encryption, ransom wallpaper, full-screen lock window) to study detection, with a sandbox guard whose safety rules are covered by tests.
+
 I built this repository while going through the ICC-03 cybersecurity program. It started as a place to keep my notes, and over time it turned into a set of working tools I wrote myself to understand how things actually work: how a port scanner talks to a socket, how you spot a brute force attack in `auth.log`, why an IAM policy with `"Resource": "*"` should make you nervous.
 
 Everything here runs. The Python code is linted and tested on every push, and the Bash scripts go through ShellCheck. If you work in security, you should be able to pick any tool, read the README next to it, and use it in a lab within a couple of minutes.
@@ -117,13 +126,13 @@ If you think in terms of MITRE ATT&CK or the NIST Cybersecurity Framework 2.0, t
 ## How the repo is kept healthy
 
 - **CI on every push and pull request** ([workflow](./.github/workflows/ci.yml)): `ruff` lints the Python, `pytest` runs the tests in [`tests/`](./tests/), ShellCheck checks the Bash scripts and a link checker makes sure no README points to a file that moved.
-- **Tests for the logic that matters**: log parsing, IOC matching, IAM findings, risk scoring, header grading and hash identification. They run offline in under a second.
+- **Tests for the logic that matters**: log parsing, IOC matching, IAM findings, risk scoring, header grading, hash identification, subnetting, password cracking, file permission checks, file encryption and the ransomware simulator's sandbox guard. The port scanner is tested against throwaway listeners on `127.0.0.1`, and the Bash tools' input validation is tested with injection payloads. Everything runs offline in a couple of seconds.
 - **Changes are tracked** in the [CHANGELOG](./CHANGELOG.md).
 
 To run the same checks locally:
 
 ```bash
-pip install ruff pytest
+pip install ruff pytest -r 03-data-security/exercises/ransomware-simulator/requirements.txt
 ruff check .
 pytest -q
 ```

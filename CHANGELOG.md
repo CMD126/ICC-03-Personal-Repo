@@ -6,6 +6,20 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Fixed
+- `subnet-calculator` hung on large networks (`10.0.0.0/8`, `0.0.0.0/0`) because it listed every host to find the first and last one
+- `file-permissions-auditor` did not show SUID, SGID and sticky bits (`4755` printed as `rwxr-xr-x`) and reported every symlink as world-writable
+- `file-encryptor` truncated the source file when the save dialog pointed back at it, and left half-written output after a wrong password. Output is now written to a temporary file and moved into place at the end
+- `ransomware-simulator` followed symlinks during folder encryption, could overwrite existing files in single-file mode, and accepted `/` or the home folder as `RANSIM_SANDBOX`
+- `port-scanner` sent an HTTP request to every open port before reading its banner. Services that greet first (SSH, FTP, SMTP) are now read first
+- `network-tool` passed the latency sample count to bash arithmetic and awk unchecked (command injection), used a predictable `/tmp` directory, and pinged every address twice in the fallback sweep
+- `nmatrix`, `recon-tool`, `network-tool` and `syscript` passed user input starting with `-` to nmap, apt, dig and others as options. Targets, ports, package and unit names are now validated
+
+### Added
+- Tests for the port scanner, subnet calculator, password auditor, file permissions auditor, file encryptor, ransomware simulator sandbox and the Bash tools' input validation (193 tests in total)
+- CI installs `cryptography` and `Pillow` so the encryption tests run there
+
+### Planned
 - Advanced exercises for Cloud Security and Networking
 
 ---
