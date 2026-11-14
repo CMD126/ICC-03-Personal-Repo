@@ -66,6 +66,9 @@ File and folder operations only work **inside a sandbox folder**. Any path outsi
 
 - Default sandbox: `lab_sandbox/` next to the script (created automatically).
 - Custom sandbox: `RANSIM_SANDBOX=/path/to/test-folder python ransomware_simulator.py`
+- The simulator refuses to start if the sandbox is the filesystem root, your home folder (or a parent of it), or a folder that contains the script and its key.
+- Symlinks are never followed, so a link inside the sandbox cannot be used to reach files outside it, and existing files are never overwritten.
+- These guarantees are covered by [`tests/test_ransomware_simulator.py`](../../../tests/test_ransomware_simulator.py).
 
 A key file (`key.key`) is generated next to the script on first run, outside the sandbox. Keep it, because it is required for decryption. The wallpaper change (option 7) only runs on Windows.
 

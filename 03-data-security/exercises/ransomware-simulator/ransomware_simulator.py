@@ -22,10 +22,36 @@ WALLPAPER_PATH = BASE_DIR / "README_WALLPAPER.bmp"
 KEY_PATH = BASE_DIR / "key.key"
 
 
+def sandbox_problem(sandbox=None):
+    """
+    Return a reason why the sandbox folder is unsafe to use, or None if it is fine.
+
+    RANSIM_SANDBOX lets the user pick the folder, so a typo like
+    RANSIM_SANDBOX=~ or RANSIM_SANDBOX=/ would otherwise turn the simulator
+    loose on real data. The sandbox must be a dedicated folder: not the
+    filesystem root, not the home folder or one of its parents, and not a
+    folder that contains this script and its key.
+    """
+    sandbox = Path(sandbox or SANDBOX).expanduser().resolve()
+    home = Path.home().resolve()
+    if sandbox == Path(sandbox.anchor):
+        return "it is the filesystem root"
+    if sandbox == home or sandbox in home.parents:
+        return "it is your home folder or one of its parents"
+    if sandbox == BASE_DIR or sandbox in BASE_DIR.parents:
+        return "it contains the simulator script and its key"
+    return None
+
+
 def in_sandbox(path):
     """
     Resolve a user-supplied path and return it only if it is inside SANDBOX.
+    Symlinks are resolved first, so a link inside the sandbox that points
+    outside of it is refused too.
     """
+    if not str(path).strip():
+        print("[!] No path entered.")
+        return None
     resolved = Path(path).expanduser().resolve()
     if resolved == SANDBOX or SANDBOX in resolved.parents:
         return resolved
@@ -91,11 +117,12 @@ def encrypt_file():
         print("[!] Invalid file.")
         return
 
-    data = path.read_bytes()
-    encrypted = f.encrypt(data)
-
     out = path.with_suffix(path.suffix + ".enc")
-    out.write_bytes(encrypted)
+    if out.exists():
+        print(f"[!] Refused: {out} already exists.")
+        return
+
+    out.write_bytes(f.encrypt(path.read_bytes()))
 
     path.unlink()  # delete original
     print(f"[+] Encrypted file saved as {out}")
@@ -127,6 +154,10 @@ def decrypt_file():
         # Fallback: if no .enc extension exists, append ".dec"
         out_path = enc_path.with_name(enc_path.name + ".dec")
 
+    if out_path.exists():
+        print(f"[!] Refused: {out_path} already exists.")
+        return
+
     # Write the decrypted content to the output file
     out_path.write_bytes(decrypted)
 
@@ -151,28 +182,28 @@ def encrypt_folder():
 
     print(f"\n[+] Encrypting folder: {folder_path}\n")
 
-    for file in folder_path.rglob("*"):
-        if file.is_file():
+    for file in sorted(folder_path.rglob("*")):
+        # Symlinks may point outside the sandbox: never follow them
+        if file.is_symlink() or not file.is_file():
+            continue
 
-            # prevent re-encrypting encrypted files
-            if file.suffix == ".enc":
-                continue
+        # prevent re-encrypting encrypted files
+        if file.suffix == ".enc":
+            continue
 
-            try:
-                data = file.read_bytes()
-                encrypted = f.encrypt(data)
+        out = file.with_suffix(file.suffix + ".enc")
+        if out.exists():
+            print(f"[!] Skipping (target exists): {out}")
+            continue
 
-                out = file.with_suffix(file.suffix + ".enc")
-                out.write_bytes(encrypted)
-
-                file.unlink()  # remove original
-
-                print(f"[+] Encrypted: {file}")
-
-            except PermissionError:
-                print(f"[!] Skipped (permission denied): {file}")
-            except Exception as e:
-                print(f"[!] Error with {file}: {e}")
+        try:
+            out.write_bytes(f.encrypt(file.read_bytes()))
+            file.unlink()  # remove original
+            print(f"[+] Encrypted: {file}")
+        except PermissionError:
+            print(f"[!] Skipped (permission denied): {file}")
+        except Exception as e:
+            print(f"[!] Error with {file}: {e}")
 
     print("\n[✔] Folder encryption complete.")
 
@@ -191,34 +222,33 @@ def decrypt_folder():
 
     print(f"\n[+] Decrypting folder: {folder_path}\n")
 
-    for file in folder_path.rglob("*"):
-        if file.is_file():
+    for file in sorted(folder_path.rglob("*")):
+        # Symlinks may point outside the sandbox: never follow them
+        if file.is_symlink() or not file.is_file():
+            continue
 
-            # Only decrypt .enc files
-            if file.suffix != ".enc":
-                continue
+        # Only decrypt .enc files
+        if file.suffix != ".enc":
+            continue
 
-            try:
-                data = file.read_bytes()
-                decrypted = f.decrypt(data)
+        # remove the .enc extension → restore original filename
+        original_path = file.with_suffix("")
 
-                # remove the .enc extension → restore original filename
-                original_path = file.with_suffix("")
+        # Avoid accidental overwrites
+        if original_path.exists():
+            print(f"[!] Skipping (target exists): {original_path}")
+            continue
 
-                # Avoid accidental overwrites
-                if original_path.exists():
-                    print(f"[!] Skipping (target exists): {original_path}")
-                    continue
-
-                original_path.write_bytes(decrypted)
-                file.unlink()  # delete encrypted file
-
-                print(f"[+] Decrypted: {original_path}")
-
-            except PermissionError:
-                print(f"[!] Skipped (permission denied): {file}")
-            except Exception as e:
-                print(f"[!] Error with {file}: {e}")
+        try:
+            original_path.write_bytes(f.decrypt(file.read_bytes()))
+            file.unlink()  # delete encrypted file
+            print(f"[+] Decrypted: {original_path}")
+        except InvalidToken:
+            print(f"[!] Skipped (wrong key or corrupted file): {file}")
+        except PermissionError:
+            print(f"[!] Skipped (permission denied): {file}")
+        except Exception as e:
+            print(f"[!] Error with {file}: {e}")
 
     print("\n[✔] Folder decryption complete.")
 
@@ -399,6 +429,11 @@ def menu():
 
 
 if __name__ == "__main__":
+    problem = sandbox_problem()
+    if problem:
+        print(f"[!] Refusing to use {SANDBOX} as the sandbox: {problem}.")
+        print("[!] Point RANSIM_SANDBOX at a dedicated, empty test folder.")
+        sys.exit(1)
     SANDBOX.mkdir(parents=True, exist_ok=True)
     print(f"[i] Sandbox: {SANDBOX} (only paths inside it can be encrypted/decrypted)")
     try:
