@@ -20,7 +20,7 @@ Desktop app for symmetric encryption using Fernet (Python Cryptography).
 3. **Bonus Challenges**:
    - GUI with Tkinter.
    - PBKDF2 key derivation (no direct key storage).
-   - Chunked processing (1MB) for large files.
+   - Chunked processing (1MB) for large files, written to a temporary file and only moved into place when every chunk succeeds (a wrong password never leaves a half-written output).
    - Threaded operations (non-blocking UI).
 
 ---

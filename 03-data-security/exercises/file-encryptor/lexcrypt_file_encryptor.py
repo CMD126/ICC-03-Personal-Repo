@@ -2,6 +2,7 @@
 import base64
 import os
 import struct
+import tempfile
 import threading
 import tkinter as tk
 from datetime import datetime
@@ -72,6 +73,33 @@ def read_chunk(src) -> bytes | None:
         return None
     length = struct.unpack(">I", header)[0]
     return src.read(length)
+
+
+def process_file(fernet: Fernet, src: str, dst: str, encrypt: bool) -> None:
+    """
+    Encrypt or decrypt src into dst, one length-prefixed chunk at a time.
+
+    The output is written to a temporary file next to dst and only moved into
+    place once every chunk succeeded. A wrong password or a corrupted file
+    therefore never leaves a half-written dst behind, and choosing the source
+    file itself as the destination cannot truncate it before it is read.
+    """
+    if os.path.exists(dst) and os.path.samefile(src, dst):
+        raise ValueError("destination is the source file; choose another name")
+
+    fd, tmp_path = tempfile.mkstemp(prefix=".lexcrypt-", dir=os.path.dirname(os.path.abspath(dst)))
+    try:
+        with open(src, "rb") as src_f, os.fdopen(fd, "wb") as dst_f:
+            if encrypt:
+                while chunk := src_f.read(CHUNK_SIZE):
+                    write_chunk(dst_f, fernet.encrypt(chunk))
+            else:
+                while (enc_chunk := read_chunk(src_f)) is not None:
+                    dst_f.write(fernet.decrypt(enc_chunk))
+        os.replace(tmp_path, dst)
+    except BaseException:
+        os.unlink(tmp_path)
+        raise
 
 
 # ---------------------------------------------------------------------------
@@ -345,13 +373,7 @@ class CryptoApp:
         for i, (src, dst) in enumerate(pairs):
             base = os.path.basename(src)
             try:
-                with open(src, "rb") as src_f, open(dst, "wb") as dst_f:
-                    if encrypt:
-                        while chunk := src_f.read(CHUNK_SIZE):
-                            write_chunk(dst_f, fernet.encrypt(chunk))
-                    else:
-                        while (enc_chunk := read_chunk(src_f)) is not None:
-                            dst_f.write(fernet.decrypt(enc_chunk))
+                process_file(fernet, src, dst, encrypt)
                 success += 1
                 self.root.after(0, self.log_message,
                                 f"{mode}ed: {base}", "SUCCESS")
