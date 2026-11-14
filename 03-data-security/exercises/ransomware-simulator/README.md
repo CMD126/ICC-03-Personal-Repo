@@ -60,7 +60,14 @@ pip install cryptography pillow
 python ransomware_simulator.py
 ```
 
-A key file (`key.key`) is generated and saved to the Desktop on first run. Keep it, because it is required for decryption.
+### Safety guard
+
+File and folder operations only work **inside a sandbox folder**. Any path outside it is refused, so the simulator cannot encrypt real data by accident.
+
+- Default sandbox: `lab_sandbox/` next to the script (created automatically).
+- Custom sandbox: `RANSIM_SANDBOX=/path/to/test-folder python ransomware_simulator.py`
+
+A key file (`key.key`) is generated next to the script on first run, outside the sandbox. Keep it, because it is required for decryption. The wallpaper change (option 7) only runs on Windows.
 
 ---
 

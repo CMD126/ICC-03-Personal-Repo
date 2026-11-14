@@ -2,6 +2,8 @@
 
 # Import libraries
 import ctypes
+import os
+import sys
 import tkinter as tk
 import tkinter.messagebox as messagebox
 from pathlib import Path
@@ -9,28 +11,41 @@ from pathlib import Path
 from cryptography.fernet import Fernet, InvalidToken
 from PIL import Image, ImageDraw, ImageFont
 
-# 1Dirs
-HOME = Path.home()
-DESKTOP = HOME / "Desktop"
-TARGET = HOME / "OneDrive" / "Desktop" / "lab8folder"
-output = DESKTOP / "README_WALLPAPER.bmp"
+# Dirs
+# All file/folder operations are restricted to SANDBOX so the simulator can
+# never touch real data by mistake. Override with the RANSIM_SANDBOX env var.
+BASE_DIR = Path(__file__).resolve().parent
+SANDBOX = Path(os.environ.get("RANSIM_SANDBOX", BASE_DIR / "lab_sandbox")).expanduser().resolve()
+WALLPAPER_PATH = BASE_DIR / "README_WALLPAPER.bmp"
 
-# Key
-KEY_PATH = DESKTOP / "key.key"
+# Key (kept next to the script, outside the sandbox so it is never encrypted)
+KEY_PATH = BASE_DIR / "key.key"
+
+
+def in_sandbox(path):
+    """
+    Resolve a user-supplied path and return it only if it is inside SANDBOX.
+    """
+    resolved = Path(path).expanduser().resolve()
+    if resolved == SANDBOX or SANDBOX in resolved.parents:
+        return resolved
+    print(f"[!] Refused: {resolved} is outside the sandbox ({SANDBOX}).")
+    return None
 
 # key functions
 def write_key():
     """
-    Generate a Fernet key and save as key.key on Desktop
+    Generate a Fernet key and save it as key.key next to the script
     """
     key = Fernet.generate_key()
+    KEY_PATH.parent.mkdir(parents=True, exist_ok=True)
     KEY_PATH.write_bytes(key)
     print(f"[+] Key saved at: {KEY_PATH}")
     return key
 
 def load_key():
     """
-    Load key.key from Desktop; return None if missing
+    Load key.key; return None if missing
     """
     if not KEY_PATH.exists():
         print("[!] key.key not found.")
@@ -68,7 +83,9 @@ def decrypt_message():
 
 def encrypt_file():
     f = if_key()
-    path = Path(input("Enter file path to encrypt: ").strip())
+    path = in_sandbox(input("Enter file path to encrypt: ").strip())
+    if path is None:
+        return
 
     if not path.exists() or not path.is_file():
         print("[!] Invalid file.")
@@ -85,7 +102,9 @@ def encrypt_file():
 
 def decrypt_file():
     f = if_key()
-    enc_path = Path(input("Enter encrypted file path: ").strip())
+    enc_path = in_sandbox(input("Enter encrypted file path: ").strip())
+    if enc_path is None:
+        return
 
 
     if not enc_path.exists() or not enc_path.is_file():
@@ -122,7 +141,9 @@ def encrypt_folder():
     Encrypts all files inside a folder (recursively).
     """
     f = if_key()
-    folder_path = Path(input("Enter folder path to encrypt: ").strip())
+    folder_path = in_sandbox(input("Enter folder path to encrypt: ").strip())
+    if folder_path is None:
+        return
 
     if not folder_path.exists() or not folder_path.is_dir():
         print("[!] Invalid folder.")
@@ -160,7 +181,9 @@ def decrypt_folder():
     Decrypts all .enc files inside a folder (recursively).
     """
     f = if_key()
-    folder_path = Path(input("Enter folder path to decrypt: ").strip())
+    folder_path = in_sandbox(input("Enter folder path to decrypt: ").strip())
+    if folder_path is None:
+        return
 
     if not folder_path.exists() or not folder_path.is_dir():
         print("[!] Invalid folder.")
@@ -202,8 +225,7 @@ def decrypt_folder():
 # README Wallpaper Generation and Setting
 def generate_readme_wallpaper(output_path=None):
     if output_path is None:
-        desktop = Path.home() / "Desktop"
-        output_path = desktop / "README_WALLPAPER.bmp"
+        output_path = WALLPAPER_PATH
 
     width, height = 1920, 1080
     img = Image.new("RGB", (width, height), (30, 30, 30))
@@ -230,6 +252,9 @@ def generate_readme_wallpaper(output_path=None):
     print(f"[+] Wallpaper created at: {output_path}")
 
 def set_wallpaper(path):
+    if os.name != "nt":
+        print("[i] Wallpaper change is Windows-only; skipped.")
+        return
     ctypes.windll.user32.SystemParametersInfoW(20, 0, str(path), 3)
     print(f"[+] Wallpaper applied: {path}")
 
@@ -362,23 +387,24 @@ def menu():
     elif choice == "6":
         decrypt_folder()
     elif choice == "7":
-        output = DESKTOP / "README_WALLPAPER.bmp"
-        generate_readme_wallpaper(output)
-        set_wallpaper(output)
+        generate_readme_wallpaper(WALLPAPER_PATH)
+        set_wallpaper(WALLPAPER_PATH)
         show_popup()
     elif choice == "8":
         print("Goodbye.")
-        exit()
+        sys.exit()
     else:
         print("[!] Invalid option.")
 
 
 
 if __name__ == "__main__":
+    SANDBOX.mkdir(parents=True, exist_ok=True)
+    print(f"[i] Sandbox: {SANDBOX} (only paths inside it can be encrypted/decrypted)")
     try:
         while True:
             menu()
     except KeyboardInterrupt:
         print("\n[!] Exiting...")
-        exit()
+        sys.exit()
 

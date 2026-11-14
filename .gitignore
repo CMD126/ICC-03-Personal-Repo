@@ -107,3 +107,10 @@ Scripts/Convlex/.venv/
 # Tooling caches
 .ruff_cache/
 .pytest_cache/
+
+# Ransomware simulator runtime files
+lab_sandbox/
+README_WALLPAPER.bmp
+
+# Local AI assistant settings
+.claude/
