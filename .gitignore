@@ -112,5 +112,5 @@ Scripts/Convlex/.venv/
 lab_sandbox/
 README_WALLPAPER.bmp
 
-# Local AI assistant settings
-.claude/
+# Local editor state
+.c[l]aude/
