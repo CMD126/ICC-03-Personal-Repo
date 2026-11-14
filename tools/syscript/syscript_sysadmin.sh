@@ -30,6 +30,20 @@ section() {
     printf "\n%s=== %s ===%s\n\n" "$CYAN" "$1" "$NC"
 }
 
+# Names typed by the user go to "sudo apt" and "sudo systemctl". A value that
+# starts with "-" is parsed as an option there (apt -o lets you set hooks
+# that run commands as root), so only real package and unit names pass.
+
+# Debian package name, optionally with :arch and =version (e.g. curl:amd64=8.5.0-2)
+is_valid_pkg() {
+    [[ "$1" =~ ^[a-z0-9][a-z0-9+.-]*(:[a-z0-9-]+)?(=[A-Za-z0-9.+:~-]+)?$ ]]
+}
+
+# systemd unit name (e.g. ssh, nginx.service, getty@tty1.service)
+is_valid_unit() {
+    [[ "$1" =~ ^[A-Za-z0-9_][A-Za-z0-9:_.@\\-]*$ ]]
+}
+
 pause() {
     printf "\n%sPress Enter to continue...%s" "$DIM" "$NC"
     read -r
@@ -97,6 +111,7 @@ pkg_search() {
     section "Search Repository"
     read -rp "${CYAN}Package name to search: ${NC}" pkg
     [[ -z "$pkg" ]] && printf "%sNo name entered.%s\n" "$RED" "$NC" && return
+    [[ "$pkg" == -* ]] && printf "%sSearch term cannot start with '-'.%s\n" "$RED" "$NC" && return
     apt-cache search "$pkg" | sort | less
 }
 
@@ -104,6 +119,7 @@ pkg_install() {
     section "Install Package"
     read -rp "${CYAN}Package name to install: ${NC}" pkg
     [[ -z "$pkg" ]] && printf "%sNo name entered.%s\n" "$RED" "$NC" && return
+    ! is_valid_pkg "$pkg" && printf "%sInvalid package name: '%s'%s\n" "$RED" "$pkg" "$NC" && return
     printf "Installing '%s'...\n" "$pkg"
     sudo apt install "$pkg" -y \
         && printf "%sInstalled: %s%s\n" "$GREEN" "$pkg" "$NC" \
@@ -114,6 +130,7 @@ pkg_remove() {
     section "Remove Package"
     read -rp "${CYAN}Package name to remove: ${NC}" pkg
     [[ -z "$pkg" ]] && printf "%sNo name entered.%s\n" "$RED" "$NC" && return
+    ! is_valid_pkg "$pkg" && printf "%sInvalid package name: '%s'%s\n" "$RED" "$pkg" "$NC" && return
     confirm "Remove '$pkg'?" || { printf "Cancelled.\n"; return; }
     sudo apt remove "$pkg" -y \
         && printf "%sRemoved: %s%s\n" "$GREEN" "$pkg" "$NC" \
@@ -124,6 +141,7 @@ pkg_purge() {
     section "Purge Package"
     read -rp "${CYAN}Package name to purge (removes config too): ${NC}" pkg
     [[ -z "$pkg" ]] && printf "%sNo name entered.%s\n" "$RED" "$NC" && return
+    ! is_valid_pkg "$pkg" && printf "%sInvalid package name: '%s'%s\n" "$RED" "$pkg" "$NC" && return
     confirm "Purge '$pkg' including all config files?" || { printf "Cancelled.\n"; return; }
     sudo apt purge "$pkg" -y \
         && printf "%sPurged: %s%s\n" "$GREEN" "$pkg" "$NC" \
@@ -254,6 +272,7 @@ mgmt_service_control() {
     section "Service Control"
     read -rp "${CYAN}Service name: ${NC}" svc
     [[ -z "$svc" ]] && printf "%sNo service entered.%s\n" "$RED" "$NC" && return
+    ! is_valid_unit "$svc" && printf "%sInvalid service name: '%s'%s\n" "$RED" "$svc" "$NC" && return
 
     printf "\n  1) Status   2) Start   3) Stop\n"
     printf "  4) Restart  5) Enable  6) Disable\n\n"
@@ -495,4 +514,8 @@ main() {
     done
 }
 
-main "$@"
+# Run only when executed, not when sourced (the test suite sources this file
+# to check the input validators).
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    main "$@"
+fi

@@ -37,16 +37,36 @@ log_write() {
     echo "$1" | tee -a "$file" >/dev/null
 }
 
+# Lowercase, strip scheme, path and port: "HTTPS://Example.com:8443/x" -> "example.com"
+normalize_target() {
+    local t="${1,,}"
+    t="${t#http*://}"   # strip scheme
+    t="${t%%/*}"        # strip path
+    [[ "$t" == *.*:* && "$t" != *::* ]] && t="${t%:*}"   # strip :port (not IPv6)
+    printf '%s' "$t"
+}
+
+# The target is passed to whois, dig, nmap, curl and openssl, and used in a
+# URL. A value starting with "-" would be parsed as an option, and characters
+# like "?", "#" or "&" would change the geolocation URL, so only hostnames and
+# IPv4/IPv6 addresses are accepted.
+is_valid_target() {
+    [[ ${#1} -le 253 && "$1" =~ ^[a-z0-9]([a-z0-9._:-]*[a-z0-9])?$ ]]
+}
+
 check_target() {
     if [[ -z "$TARGET" ]]; then
         echo -e "\n${C}Enter target (domain or IP): ${N}"
         read -r TARGET
-        TARGET="${TARGET,,}"          # lowercase
-        TARGET="${TARGET#http*://}"   # strip scheme
-        TARGET="${TARGET%%/*}"        # strip path
     fi
+    TARGET=$(normalize_target "$TARGET")
     if [[ -z "$TARGET" ]]; then
         err "No target specified."; return 1
+    fi
+    if ! is_valid_target "$TARGET"; then
+        err "Invalid target '${TARGET}': use a domain name or an IP address."
+        TARGET=""
+        return 1
     fi
 }
 
@@ -396,9 +416,7 @@ main_menu() {
             t|T)
                 echo -ne "\n${C}Enter target (domain or IP): ${N}"
                 read -r TARGET
-                TARGET="${TARGET,,}"
-                TARGET="${TARGET#http*://}"
-                TARGET="${TARGET%%/*}" ;;
+                check_target || { echo -e "\n${Y}Press Enter to continue...${N}"; read -r; } ;;
             1) check_target && run_whois;      echo -e "\n${Y}Press Enter to continue...${N}"; read -r ;;
             2) check_target && run_dns;        echo -e "\n${Y}Press Enter to continue...${N}"; read -r ;;
             3) check_target && run_subdomains; echo -e "\n${Y}Press Enter to continue...${N}"; read -r ;;
@@ -414,6 +432,13 @@ main_menu() {
 }
 
 # ── Entry ───────────────────────────────────────────────────────────────────────
-TARGET="${1:-}"
-trap 'echo -e "\n\n${Y}Interrupted.${N}\n"; exit 0' INT
-main_menu
+# Run only when executed, not when sourced (the test suite sources this file
+# to check the input validators).
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    TARGET="${1:-}"
+    if [[ -n "$TARGET" ]] && ! check_target; then
+        exit 1
+    fi
+    trap 'echo -e "\n\n${Y}Interrupted.${N}\n"; exit 0' INT
+    main_menu
+fi

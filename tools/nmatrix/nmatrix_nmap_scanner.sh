@@ -113,10 +113,25 @@ matrix_effect() {
 # Input helpers — store result in TARGET_HOST / TARGET_NET globals
 # ---------------------------------------------------------------------------
 
+# The target goes to nmap, which runs through sudo. A value starting with "-"
+# would be read as an option (for example --script=/path/to/file.nse, which
+# runs that script as root), so only hostnames and addresses are accepted.
+is_valid_host() {
+    [[ ${#1} -le 253 && "$1" =~ ^[A-Za-z0-9]([A-Za-z0-9._:-]*[A-Za-z0-9])?$ ]]
+}
+
+is_valid_network() {
+    [[ "$1" =~ ^[0-9A-Fa-f][0-9A-Fa-f.:]*(/[0-9]{1,3})?$ ]]
+}
+
 get_host() {
     read -rp "${C}Target host/IP:${N} " TARGET_HOST
     if [[ -z "$TARGET_HOST" ]]; then
         printf "%sError: host cannot be empty.%s\n" "$R" "$N"
+        return 1
+    fi
+    if ! is_valid_host "$TARGET_HOST"; then
+        printf "%sError: '%s' is not a valid hostname or IP address.%s\n" "$R" "$TARGET_HOST" "$N"
         return 1
     fi
 }
@@ -125,6 +140,10 @@ get_network() {
     read -rp "${C}Target network (e.g. 192.168.1.0/24):${N} " TARGET_NET
     if [[ -z "$TARGET_NET" ]]; then
         printf "%sError: network cannot be empty.%s\n" "$R" "$N"
+        return 1
+    fi
+    if ! is_valid_network "$TARGET_NET"; then
+        printf "%sError: '%s' is not a valid address or CIDR network.%s\n" "$R" "$TARGET_NET" "$N"
         return 1
     fi
 }
@@ -263,16 +282,17 @@ scan_vuln() {
 
 scan_custom() {
     get_host || return
-    read -rp "${C}Custom nmap flags (e.g. -p 80,443 -sV --script http-title):${N} " flags
-    if [[ -z "$flags" ]]; then
+    local -a flags
+    # read -a splits on whitespace into an array without glob expansion, so a
+    # flag like -p* is passed to nmap as typed instead of matching local files
+    read -rp "${C}Custom nmap flags (e.g. -p 80,443 -sV --script http-title):${N} " -a flags
+    if [[ ${#flags[@]} -eq 0 ]]; then
         printf "%sNo flags entered.%s\n" "$R" "$N"; return
     fi
-    printf "\n%sCustom scan — %s : nmap %s%s\n\n" "$Y" "$TARGET_HOST" "$flags" "$N"
-    log "Custom scan: $TARGET_HOST flags=$flags"
+    printf "\n%sCustom scan — %s : nmap %s%s\n\n" "$Y" "$TARGET_HOST" "${flags[*]}" "$N"
+    log "Custom scan: $TARGET_HOST flags=${flags[*]}"
     local result
-    # Intentional word splitting so each nmap flag is passed separately
-    # shellcheck disable=SC2086
-    result=$(nmap_run $flags "$TARGET_HOST" 2>/dev/null)
+    result=$(nmap_run "${flags[@]}" "$TARGET_HOST" 2>/dev/null)
     print_results "$result"
     save_results "$result" "$TARGET_HOST" "custom"
 }
@@ -347,4 +367,8 @@ main() {
     done
 }
 
-main "$@"
+# Run only when executed, not when sourced (the test suite sources this file
+# to check the input validators).
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    main "$@"
+fi
