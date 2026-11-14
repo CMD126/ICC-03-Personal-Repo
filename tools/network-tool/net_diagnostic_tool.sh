@@ -9,7 +9,7 @@
 # Configuration
 # ---------------------------------------------------------------------------
 LOG_FILE="${HOME}/.local/share/netdiag/network_diagnostic.log"
-TEMP_DIR="/tmp/netdiag_$$"
+TEMP_DIR=""   # created with mktemp in setup_environment
 DEFAULT_PING_COUNT=4
 DEFAULT_NMAP_PORTS="1-1000"
 TIMEOUT_SECONDS=10
@@ -29,7 +29,13 @@ NC='\033[0m'
 # ---------------------------------------------------------------------------
 
 setup_environment() {
-    mkdir -p "$TEMP_DIR"
+    # mktemp creates a fresh, private (0700) directory with a random name.
+    # A fixed name such as /tmp/netdiag_$$ can be created in advance by another
+    # local user, who could then plant symlinks for curl/nmap to write through.
+    TEMP_DIR=$(mktemp -d "${TMPDIR:-/tmp}/netdiag.XXXXXX") || {
+        echo -e "${RED}Error: could not create a temporary directory${NC}" >&2
+        exit 1
+    }
     mkdir -p "$(dirname "$LOG_FILE")"
     trap 'rm -rf "$TEMP_DIR"' EXIT
 }
@@ -60,6 +66,61 @@ check_dependencies() {
 
 section() {
     echo -e "\n${GREEN}=== $1 ===${NC}\n"
+}
+
+# ---------------------------------------------------------------------------
+# Input validation
+#
+# Every value typed by the user ends up as an argument to ping, nmap, dig,
+# openssl and friends, or inside bash arithmetic. Arithmetic on an unchecked
+# string executes command substitutions in it (try: a[$(id)]), and a value
+# that starts with "-" is parsed as an option (try: --script=... for nmap).
+# These helpers whitelist what each prompt may contain.
+# ---------------------------------------------------------------------------
+
+# Hostname, IPv4 or IPv6 address: letters, digits, dot, colon, dash and
+# underscore, never starting or ending with a dash.
+is_valid_host() {
+    [[ ${#1} -le 253 && "$1" =~ ^[A-Za-z0-9]([A-Za-z0-9._:-]*[A-Za-z0-9])?$ ]]
+}
+
+# IPv4/IPv6 address or network in CIDR notation, as accepted by nmap -sn.
+is_valid_network() {
+    [[ "$1" =~ ^[0-9A-Fa-f][0-9A-Fa-f.:]*(/[0-9]{1,3})?$ ]]
+}
+
+# Integer between $2 and $3 (inclusive). Leading zeros are read as decimal.
+is_int_in_range() {
+    [[ "$1" =~ ^[0-9]{1,6}$ ]] && (( 10#$1 >= $2 && 10#$1 <= $3 ))
+}
+
+# nmap port list: 80 | 1-1000 | 22,80,443 | 1-100,443
+is_valid_port_spec() {
+    local spec="$1" part lo hi
+    local -a parts
+    [[ "$spec" =~ ^[0-9]+(-[0-9]+)?(,[0-9]+(-[0-9]+)?)*$ ]] || return 1
+    IFS=',' read -ra parts <<< "$spec"
+    for part in "${parts[@]}"; do
+        if [[ "$part" =~ ^([0-9]+)-([0-9]+)$ ]]; then
+            lo=${BASH_REMATCH[1]} hi=${BASH_REMATCH[2]}
+        elif [[ "$part" =~ ^[0-9]+$ ]]; then
+            lo=$part hi=$part
+        else
+            return 1
+        fi
+        is_int_in_range "$lo" 1 65535 && is_int_in_range "$hi" 1 65535 || return 1
+        (( 10#$lo <= 10#$hi )) || return 1
+    done
+}
+
+# Print an error and return 1 unless the value passes the given check.
+require() {
+    local check="$1" value="$2" what="$3"
+    shift 3
+    if ! "$check" "$value" "$@"; then
+        echo -e "${RED}Invalid ${what}: '${value}'${NC}" >&2
+        return 1
+    fi
 }
 
 # ---------------------------------------------------------------------------
@@ -102,9 +163,11 @@ show_interfaces() {
 ping_host() {
     read -rp "Enter host to ping (default: 8.8.8.8): " host
     host=${host:-8.8.8.8}
+    require is_valid_host "$host" "host" || return
 
     read -rp "Number of packets (default: $DEFAULT_PING_COUNT): " count
     count=${count:-$DEFAULT_PING_COUNT}
+    require is_int_in_range "$count" "packet count (1-100)" 1 100 || return
 
     log_action "Pinging $host with $count packets"
 
@@ -122,9 +185,12 @@ ping_host() {
 latency_graph() {
     read -rp "Enter host (default: 8.8.8.8): " host
     host=${host:-8.8.8.8}
+    require is_valid_host "$host" "host" || return
 
     read -rp "Number of samples (default: 20): " samples
     samples=${samples:-20}
+    require is_int_in_range "$samples" "sample count (1-500)" 1 500 || return
+    samples=$((10#$samples))
 
     echo -e "\n${YELLOW}Collecting $samples ping samples to $host...${NC}"
     log_action "Latency graph: $host ($samples samples)"
@@ -179,18 +245,18 @@ latency_graph() {
             (( lost++ ))
         else
             valid+=("$rtt")
-            sum=$(awk "BEGIN{print $sum + $rtt}")
+            sum=$(awk -v a="$sum" -v b="$rtt" 'BEGIN{print a + b}')
         fi
     done
 
     echo -e "\n${YELLOW}Summary:${NC}"
     if [[ ${#valid[@]} -gt 0 ]]; then
         local avg
-        avg=$(awk "BEGIN{printf \"%.2f\", $sum / ${#valid[@]}}")
+        avg=$(awk -v s="$sum" -v n="${#valid[@]}" 'BEGIN{printf "%.2f", s / n}')
         echo -e "  Min: ${min_ms} ms  Avg: ${avg} ms  Max: ${max_ms} ms"
     fi
     local loss_pct
-    loss_pct=$(awk "BEGIN{printf \"%.1f\", $lost * 100 / $samples}")
+    loss_pct=$(awk -v l="$lost" -v n="$samples" 'BEGIN{printf "%.1f", l * 100 / n}')
     echo -e "  Sent: $samples  Lost: $lost  Loss: ${loss_pct}%"
 }
 
@@ -201,6 +267,7 @@ latency_graph() {
 trace_route() {
     read -rp "Enter host for traceroute (default: 8.8.8.8): " host
     host=${host:-8.8.8.8}
+    require is_valid_host "$host" "host" || return
 
     log_action "Traceroute to $host"
     echo -e "\n${YELLOW}Traceroute to $host (max 30 hops):${NC}"
@@ -240,9 +307,11 @@ show_routing() {
 port_scan() {
     read -rp "Enter host to scan (default: localhost): " host
     host=${host:-localhost}
+    require is_valid_host "$host" "host" || return
 
     read -rp "Port range (default: $DEFAULT_NMAP_PORTS): " ports
     ports=${ports:-$DEFAULT_NMAP_PORTS}
+    require is_valid_port_spec "$ports" "port range (e.g. 1-1000 or 22,80,443)" || return
 
     if ! check_dependencies "nmap"; then
         echo "Install with: sudo apt install nmap"
@@ -320,6 +389,7 @@ host_discovery() {
 
     read -rp "Subnet to scan (default: $subnet): " target
     target=${target:-$subnet}
+    require is_valid_network "$target" "subnet (e.g. 192.168.1.0/24)" || return
 
     log_action "Host discovery on $target"
     echo -e "${YELLOW}Scanning $target for live hosts...${NC}\n"
@@ -347,22 +417,26 @@ host_discovery() {
             return
         fi
 
-        local results=()
+        # Ping every address in parallel; each job appends to a temp file,
+        # which is printed once all of them have finished.
+        local up_file="$TEMP_DIR/sweep_up.txt"
+        : > "$up_file"
         for i in $(seq 1 254); do
             {
                 if ping -c 1 -W 1 "${base}.${i}" &>/dev/null; then
-                    echo "${base}.${i}"
+                    echo "${base}.${i}" >> "$up_file"
                 fi
             } &
         done
         wait
 
-        # Collect results from subshells via temp file
-        for i in $(seq 1 254); do
-            if ping -c 1 -W 1 "${base}.${i}" &>/dev/null; then
-                echo -e "  ${GREEN}[UP]${NC} ${base}.${i}"
-            fi
-        done
+        if [[ -s "$up_file" ]]; then
+            sort -t. -k4,4n "$up_file" | while IFS= read -r ip; do
+                echo -e "  ${GREEN}[UP]${NC} ${ip}"
+            done
+        else
+            echo "  No hosts answered ICMP."
+        fi
     fi
 
     echo -e "\n${BLUE}Tip:${NC} Use option 6 (Port Scan) on discovered hosts for further enumeration."
@@ -375,6 +449,7 @@ host_discovery() {
 check_dns() {
     read -rp "Enter domain to resolve (default: google.com): " domain
     domain=${domain:-google.com}
+    require is_valid_host "$domain" "domain" || return
 
     echo -e "\n${YELLOW}DNS Resolution for $domain:${NC}"
     log_action "DNS lookup: $domain"
@@ -426,9 +501,11 @@ check_dns() {
 ssl_check() {
     read -rp "Enter domain to inspect (default: google.com): " domain
     domain=${domain:-google.com}
+    require is_valid_host "$domain" "domain" || return
 
     read -rp "Port (default: 443): " port
     port=${port:-443}
+    require is_int_in_range "$port" "port (1-65535)" 1 65535 || return
 
     check_dependencies "openssl" || return
 
@@ -939,4 +1016,8 @@ main() {
     done
 }
 
-main "$@"
+# Run only when executed, not when sourced (the test suite sources this file
+# to check the input validators).
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    main "$@"
+fi
