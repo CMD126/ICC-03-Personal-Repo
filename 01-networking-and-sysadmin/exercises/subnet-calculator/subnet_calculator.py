@@ -6,6 +6,8 @@ network/broadcast addresses, usable host ranges, and IP classes.
 """
 
 import ipaddress
+import itertools
+import math
 import sys
 
 BANNER = """
@@ -15,6 +17,42 @@ BANNER = """
 ╚══════════════════════════════════════════════════════════════╝
 """
 
+def parse_network(raw: str) -> ipaddress.IPv4Network:
+    """Parse '192.168.1.0/24' or '192.168.1.0 255.255.255.0'. Raises ValueError."""
+    parts = raw.split()
+    if len(parts) == 2:
+        return ipaddress.IPv4Network(f"{parts[0]}/{parts[1]}", strict=False)
+    if len(parts) == 1:
+        return ipaddress.IPv4Network(parts[0], strict=False)
+    raise ValueError("expected 'IP/prefix' or 'IP MASK'")
+
+
+def host_range(net: ipaddress.IPv4Network) -> tuple:
+    """
+    Return (first_host, last_host, usable_count) without listing every host.
+
+    net.hosts() would build millions of objects for a /8 (and billions for
+    0.0.0.0/0), so the range is computed arithmetically instead. /31 and /32
+    follow RFC 3021 and Python's ipaddress: every address is usable.
+    """
+    if net.prefixlen >= 31:
+        return net.network_address, net.broadcast_address, net.num_addresses
+    return net.network_address + 1, net.broadcast_address - 1, net.num_addresses - 2
+
+
+def split_network(net: ipaddress.IPv4Network, count: int) -> tuple:
+    """
+    Split net into at least `count` equal subnets.
+    Returns (new_prefix, [first `count` subnets]). Raises ValueError if too small.
+    """
+    if count < 2:
+        raise ValueError("count must be >= 2")
+    new_prefix = net.prefixlen + math.ceil(math.log2(count))
+    if new_prefix > 30:
+        raise ValueError("not enough address space to divide further")
+    return new_prefix, list(itertools.islice(net.subnets(new_prefix=new_prefix), count))
+
+
 def subnet_info():
     """Full breakdown of a network given IP/CIDR or IP + subnet mask."""
     print("\n  Enter network in CIDR notation (e.g. 192.168.1.0/24)")
@@ -22,18 +60,12 @@ def subnet_info():
     raw = input("[?] Network: ").strip()
 
     try:
-        # Support 'IP MASK' format
-        if " " in raw:
-            parts = raw.split()
-            ip, mask = parts[0], parts[1]
-            net = ipaddress.IPv4Network(f"{ip}/{mask}", strict=False)
-        else:
-            net = ipaddress.IPv4Network(raw, strict=False)
+        net = parse_network(raw)
     except ValueError as e:
         print(f"[!] Invalid input: {e}")
         return
 
-    hosts = list(net.hosts())
+    first, last, usable = host_range(net)
     print(f"""
   ┌─────────────────────────────────────────────────────┐
   │  Network Information                                │
@@ -45,11 +77,25 @@ def subnet_info():
   CIDR Notation     : {net}
   Prefix Length     : /{net.prefixlen}
   Total Addresses   : {net.num_addresses}
-  Usable Hosts      : {len(hosts)}
-  First Host        : {hosts[0] if hosts else 'N/A'}
-  Last Host         : {hosts[-1] if hosts else 'N/A'}
+  Usable Hosts      : {usable}
+  First Host        : {first}
+  Last Host         : {last}
   IP Version        : IPv{net.version}
   Private Range     : {'Yes' if net.is_private else 'No'}""")
+
+def ip_class(ip: ipaddress.IPv4Address) -> tuple:
+    """Return (class, default mask, max hosts) for the classful view of an address."""
+    first_octet = ip.packed[0]
+    if first_octet < 128:
+        return "A", "255.0.0.0 (/8)", "16,777,214"
+    if first_octet < 192:
+        return "B", "255.255.0.0 (/16)", "65,534"
+    if first_octet < 224:
+        return "C", "255.255.255.0 (/24)", "254"
+    if first_octet < 240:
+        return "D (Multicast)", "N/A", "N/A"
+    return "E (Reserved)", "N/A", "N/A"
+
 
 def ip_class_identifier():
     """Identify the class and type of an IPv4 address."""
@@ -60,18 +106,7 @@ def ip_class_identifier():
         print("[!] Invalid IPv4 address.")
         return
 
-    first_octet = int(str(ip).split(".")[0])
-
-    if first_octet < 128:
-        cls, default_mask, hosts = "A", "255.0.0.0 (/8)", "16,777,214"
-    elif first_octet < 192:
-        cls, default_mask, hosts = "B", "255.255.0.0 (/16)", "65,534"
-    elif first_octet < 224:
-        cls, default_mask, hosts = "C", "255.255.255.0 (/24)", "254"
-    elif first_octet < 240:
-        cls, default_mask, hosts = "D (Multicast)", "N/A", "N/A"
-    else:
-        cls, default_mask, hosts = "E (Reserved)", "N/A", "N/A"
+    cls, default_mask, hosts = ip_class(ip)
 
     addr_type = []
     if ip.is_private:     addr_type.append("Private")
@@ -102,7 +137,7 @@ def cidr_range():
         print(f"[!] Range too large (/{net.prefixlen}). Only /24 or smaller shown here.")
         print(f"  Network  : {net.network_address}")
         print(f"  Broadcast: {net.broadcast_address}")
-        print(f"  Hosts    : {net.num_addresses - 2}")
+        print(f"  Hosts    : {host_range(net)[2]}")
         return
 
     print(f"\n  Addresses in {net}:\n")
@@ -132,16 +167,8 @@ def subnet_divider():
         return
 
     try:
-        subnets = list(net.subnets(new_prefix=None))
-        # Find prefix needed
-        import math
-        bits_needed = math.ceil(math.log2(n))
-        new_prefix = net.prefixlen + bits_needed
-        if new_prefix > 30:
-            print("[!] Not enough address space to divide further.")
-            return
-        subnets = list(net.subnets(new_prefix=new_prefix))[:n]
-    except Exception as e:
+        new_prefix, subnets = split_network(net, n)
+    except ValueError as e:
         print(f"[!] Cannot divide: {e}")
         return
 
@@ -149,10 +176,8 @@ def subnet_divider():
     print(f"  {'#':<4} {'Network':<20} {'First Host':<16} {'Last Host':<16} {'Broadcast':<16} {'Hosts'}")
     print(f"  {'─'*3} {'─'*19} {'─'*15} {'─'*15} {'─'*15} {'─'*5}")
     for i, sub in enumerate(subnets, 1):
-        hosts = list(sub.hosts())
-        first = str(hosts[0]) if hosts else "N/A"
-        last  = str(hosts[-1]) if hosts else "N/A"
-        print(f"  {i:<4} {str(sub):<20} {first:<16} {last:<16} {str(sub.broadcast_address):<16} {len(hosts)}")
+        first, last, usable = host_range(sub)
+        print(f"  {i:<4} {str(sub):<20} {str(first):<16} {str(last):<16} {str(sub.broadcast_address):<16} {usable}")
 
 def main():
     print(BANNER)
