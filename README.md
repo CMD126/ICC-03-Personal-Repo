@@ -36,7 +36,7 @@ Instead of listing buzzwords, here is each skill next to the code that shows it.
 
 | Area | What I did | Proof |
 |------|------------|-------|
-| Network reconnaissance | Wrote a multithreaded TCP connect scanner from raw sockets, then a menu-driven Nmap front end and an OSINT recon script (WHOIS, DNS, subdomains, TLS) | [port-scanner](./08-penetration-testing/exercises/port-scanner/), [nmatrix](./tools/nmatrix/), [recon-tool](./tools/recon-tool/) |
+| Network reconnaissance | Wrote a multithreaded TCP connect scanner using Python stream sockets, then a menu-driven Nmap front end and an OSINT recon script (WHOIS, DNS, subdomains, TLS) | [port-scanner](./08-penetration-testing/exercises/port-scanner/), [nmatrix](./tools/nmatrix/), [recon-tool](./tools/recon-tool/) |
 | Log analysis and detection | Parsed SSH `auth.log` to flag brute force sources, successful logins and username enumeration, with a SOC style report | [log-analyzer](./04-security-operations/exercises/log-analyzer/) |
 | Threat hunting | Built an IOC scanner that matches IPs, domains and file hashes in logs and folders against a threat intel feed | [ioc-scanner](./06-threat-hunting/exercises/ioc-scanner/) |
 | Cloud security | Wrote an analyzer for AWS IAM policies that flags public principals, wildcard resources and privilege escalation actions like `iam:PassRole` | [iam-policy-analyzer](./05-cloud-security/exercises/iam-policy-analyzer/) |
