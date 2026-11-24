@@ -1,17 +1,88 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 260" role="img" aria-labelledby="t">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" role="img" aria-labelledby="t">
   <title id="t">ICC-03 Cybersecurity Portfolio</title>
   <defs>
-    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0" stop-color="#FFB454" stop-opacity=".55"/>
-      <stop offset="1" stop-color="#FFB454" stop-opacity="0"/>
-    </radialGradient>
+    <pattern id="p" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#2A3550" fill-opacity=".7"/></pattern>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFB454" stop-opacity=".55"/><stop offset="1" stop-color="#FFB454" stop-opacity="0"/></radialGradient>
   </defs>
-  <rect x="1" y="1" width="1198" height="258" rx="22" fill="#0A0E1A" stroke="#2A3550" stroke-width="2"/>
-  <g transform="translate(70 50) scale(2.6)">
-    <path d="M10 18 26 30 10 42" fill="none" stroke="#8FA3C7" stroke-opacity=".9" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M32 44 H48" fill="none" stroke="#FFB454" stroke-width="4" stroke-linecap="round"/>
-    <circle cx="40" cy="44" r="14" fill="url(#glow)"/>
-  </g>
-  <text x="300" y="132" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="68" font-weight="600" letter-spacing="-1"><tspan fill="#E6EAF2">ICC-03 </tspan><tspan fill="#FFB454">Portfolio</tspan></text>
-  <text x="302" y="184" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="30" fill="#8FA3C7">Security tools written from scratch in Python and Bash</text>
+  <rect x="1" y="1" width="1198" height="298" rx="22" fill="#0A0E1A" stroke="#2A3550" stroke-width="2"/>
+  <rect x="1" y="1" width="1198" height="298" rx="22" fill="url(#p)"/>
+  <text x="60" y="128" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="62" font-weight="600" letter-spacing="-1"><tspan fill="#E6EAF2">ICC-03 </tspan><tspan fill="#FFB454">Portfolio</tspan></text>
+  <text x="62" y="174" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="26" fill="#8FA3C7">Security tools written from scratch</text>
+  <rect x="62" y="232" width="108" height="34" rx="17" fill="#121829" stroke="#2A3550"/>
+  <text x="116" y="254" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="15" fill="#8FA3C7">13 Python</text>
+  <rect x="182" y="232" width="77" height="34" rx="17" fill="#121829" stroke="#2A3550"/>
+  <text x="220" y="254" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="15" fill="#8FA3C7">4 Bash</text>
+  <rect x="271" y="232" width="118" height="34" rx="17" fill="#121829" stroke="#2A3550"/>
+  <text x="330" y="254" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="15" fill="#8FA3C7">CI + tests</text>
+  <rect x="600" y="36" width="86" height="64" rx="10" fill="#121829" stroke="#FFB454" stroke-width="2"/>
+  <circle cx="614" cy="52" r="4.5" fill="#FFB454" fill-opacity="1"/>
+  <path d="M612 72 H674" stroke="#2A3550"/>
+  <text x="643.0" y="90" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#E6EAF2">log-analyzer</text>
+  <rect x="696" y="36" width="86" height="64" rx="10" fill="#121829" stroke="#FFB454" stroke-width="2"/>
+  <circle cx="710" cy="52" r="4.5" fill="#FFB454" fill-opacity="1"/>
+  <path d="M708 72 H770" stroke="#2A3550"/>
+  <text x="739.0" y="90" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#E6EAF2">ioc-scanner</text>
+  <rect x="792" y="36" width="86" height="64" rx="10" fill="#121829" stroke="#FFB454" stroke-width="2"/>
+  <circle cx="806" cy="52" r="4.5" fill="#FFB454" fill-opacity="1"/>
+  <path d="M804 72 H866" stroke="#2A3550"/>
+  <text x="835.0" y="90" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#E6EAF2">iam-analyzer</text>
+  <rect x="888" y="36" width="86" height="64" rx="10" fill="#121829" stroke="#2A3550" stroke-width="1.5"/>
+  <circle cx="902" cy="52" r="4.5" fill="#8FA3C7" fill-opacity="0.55"/>
+  <path d="M900 72 H962" stroke="#2A3550"/>
+  <text x="931.0" y="90" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#8FA3C7">headers</text>
+  <rect x="984" y="36" width="86" height="64" rx="10" fill="#121829" stroke="#2A3550" stroke-width="1.5"/>
+  <circle cx="998" cy="52" r="4.5" fill="#8FA3C7" fill-opacity="0.55"/>
+  <path d="M996 72 H1058" stroke="#2A3550"/>
+  <text x="1027.0" y="90" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#8FA3C7">port-scanner</text>
+  <rect x="1080" y="36" width="86" height="64" rx="10" fill="#121829" stroke="#2A3550" stroke-width="1.5"/>
+  <circle cx="1094" cy="52" r="4.5" fill="#8FA3C7" fill-opacity="0.55"/>
+  <path d="M1092 72 H1154" stroke="#2A3550"/>
+  <text x="1123.0" y="90" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#8FA3C7">subnet</text>
+  <rect x="600" y="110" width="86" height="64" rx="10" fill="#121829" stroke="#2A3550" stroke-width="1.5"/>
+  <circle cx="614" cy="126" r="4.5" fill="#8FA3C7" fill-opacity="0.55"/>
+  <path d="M612 146 H674" stroke="#2A3550"/>
+  <text x="643.0" y="164" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#8FA3C7">risk-register</text>
+  <rect x="696" y="110" width="86" height="64" rx="10" fill="#121829" stroke="#2A3550" stroke-width="1.5"/>
+  <circle cx="710" cy="126" r="4.5" fill="#8FA3C7" fill-opacity="0.55"/>
+  <path d="M708 146 H770" stroke="#2A3550"/>
+  <text x="739.0" y="164" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#8FA3C7">perms-audit</text>
+  <rect x="792" y="110" width="86" height="64" rx="10" fill="#121829" stroke="#2A3550" stroke-width="1.5"/>
+  <circle cx="806" cy="126" r="4.5" fill="#8FA3C7" fill-opacity="0.55"/>
+  <path d="M804 146 H866" stroke="#2A3550"/>
+  <text x="835.0" y="164" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#8FA3C7">passwords</text>
+  <rect x="888" y="110" width="86" height="64" rx="10" fill="#121829" stroke="#2A3550" stroke-width="1.5"/>
+  <circle cx="902" cy="126" r="4.5" fill="#8FA3C7" fill-opacity="0.55"/>
+  <path d="M900 146 H962" stroke="#2A3550"/>
+  <text x="931.0" y="164" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#8FA3C7">encryptor</text>
+  <rect x="984" y="110" width="86" height="64" rx="10" fill="#121829" stroke="#2A3550" stroke-width="1.5"/>
+  <circle cx="998" cy="126" r="4.5" fill="#8FA3C7" fill-opacity="0.55"/>
+  <path d="M996 146 H1058" stroke="#2A3550"/>
+  <text x="1027.0" y="164" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#8FA3C7">ransom-sim</text>
+  <rect x="1080" y="110" width="86" height="64" rx="10" fill="#121829" stroke="#2A3550" stroke-width="1.5"/>
+  <circle cx="1094" cy="126" r="4.5" fill="#8FA3C7" fill-opacity="0.55"/>
+  <path d="M1092 146 H1154" stroke="#2A3550"/>
+  <text x="1123.0" y="164" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#8FA3C7">hash-toolkit</text>
+  <rect x="600" y="184" width="86" height="64" rx="10" fill="#121829" stroke="#2A3550" stroke-width="1.5"/>
+  <circle cx="614" cy="200" r="4.5" fill="#8FA3C7" fill-opacity="0.55"/>
+  <path d="M612 220 H674" stroke="#2A3550"/>
+  <text x="643.0" y="238" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#8FA3C7">abdns</text>
+  <rect x="696" y="184" width="86" height="64" rx="10" fill="#121829" stroke="#2A3550" stroke-width="1.5"/>
+  <circle cx="710" cy="200" r="4.5" fill="#8FA3C7" fill-opacity="0.55"/>
+  <path d="M708 220 H770" stroke="#2A3550"/>
+  <text x="739.0" y="238" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#8FA3C7">recon</text>
+  <rect x="792" y="184" width="86" height="64" rx="10" fill="#121829" stroke="#2A3550" stroke-width="1.5"/>
+  <circle cx="806" cy="200" r="4.5" fill="#8FA3C7" fill-opacity="0.55"/>
+  <path d="M804 220 H866" stroke="#2A3550"/>
+  <text x="835.0" y="238" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#8FA3C7">nmatrix</text>
+  <rect x="888" y="184" width="86" height="64" rx="10" fill="#121829" stroke="#2A3550" stroke-width="1.5"/>
+  <circle cx="902" cy="200" r="4.5" fill="#8FA3C7" fill-opacity="0.55"/>
+  <path d="M900 220 H962" stroke="#2A3550"/>
+  <text x="931.0" y="238" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#8FA3C7">network-tool</text>
+  <rect x="984" y="184" width="86" height="64" rx="10" fill="#121829" stroke="#2A3550" stroke-width="1.5"/>
+  <circle cx="998" cy="200" r="4.5" fill="#8FA3C7" fill-opacity="0.55"/>
+  <path d="M996 220 H1058" stroke="#2A3550"/>
+  <text x="1027.0" y="238" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11.5" fill="#8FA3C7">syscript</text>
+  <rect x="1080" y="184" width="86" height="64" rx="10" fill="none" stroke="#2A3550" stroke-dasharray="4 5"/>
+  <text x="1123.0" y="222" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="22" font-weight="600" fill="#FFB454">17</text>
+  <text x="1123.0" y="240" text-anchor="middle" font-family="'JetBrains Mono', Consolas, ui-monospace, monospace" font-size="11" fill="#8FA3C7">tools</text>
 </svg>
