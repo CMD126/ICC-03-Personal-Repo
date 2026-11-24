@@ -17,7 +17,7 @@ A Python TCP port scanner built from scratch using raw sockets and multithreadin
 | Banner grabbing | Waits for services that greet first (SSH, FTP, SMTP), otherwise sends a minimal HTTP probe, and shows the first line of the reply |
 | Multithreaded | Uses a thread pool for fast parallel scanning |
 | Flexible targets | Accepts hostnames or IP addresses; resolves DNS automatically |
-| Three scan modes | Common ports, full 1–1024 sweep, or custom range |
+| Three scan modes | Common ports, full 1-1024 sweep, or custom range |
 
 ---
 
@@ -49,7 +49,7 @@ No external dependencies: uses only Python's built-in `socket`, `concurrent.futu
 | Mode | Ports scanned |
 |------|--------------|
 | Common ports | 20 well-known ports (SSH, HTTP, RDP, SMB, MySQL, etc.) |
-| Full scan | All ports 1–1024 |
+| Full scan | All ports 1-1024 |
 | Custom range | User-defined start and end port |
 
 ---
@@ -62,7 +62,7 @@ No external dependencies: uses only Python's built-in `socket`, `concurrent.futu
 | **Socket programming** | Direct use of Python `socket` for low-level network communication |
 | **Service fingerprinting** | Matching port numbers to known services; reading banners for version info |
 | **Multithreading** | `ThreadPoolExecutor` allows hundreds of ports to be probed concurrently |
-| **Recon methodology** | Port scanning is the first active step in any penetration test (reconnaissance → enumeration) |
+| **Recon methodology** | Port scanning is the first active step in any penetration test (reconnaissance, then enumeration) |
 
 ---
 

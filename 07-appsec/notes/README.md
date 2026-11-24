@@ -28,7 +28,7 @@ A reference for OWASP Top 10, secure development, testing methods, and vulnerabi
 | **SQL Injection (SQLi)** | Malicious SQL inserted into input fields to manipulate the database. | `' OR '1'='1` |
 | **Cross-Site Scripting (XSS)** | Malicious scripts injected into web pages viewed by other users. | `<script>alert(1)</script>` |
 | **CSRF** | Cross-Site Request Forgery: tricks a user's browser into making unintended requests. | Forged form submission |
-| **IDOR** | Insecure Direct Object Reference: accessing resources by manipulating IDs. | `/user/1234` → `/user/1235` |
+| **IDOR** | Insecure Direct Object Reference: accessing resources by manipulating IDs. | `/user/1234` to `/user/1235` |
 | **Path Traversal** | Navigating outside the web root using `../` sequences. | `../../etc/passwd` |
 | **Command Injection** | Injecting OS commands through user input. | `; cat /etc/passwd` |
 | **XXE** | XML External Entity: malicious XML exploits the parser to access files or SSRF. | `<!ENTITY xxe SYSTEM "file:///etc/passwd">` |
@@ -68,7 +68,7 @@ A reference for OWASP Top 10, secure development, testing methods, and vulnerabi
 | Term | Description |
 |------|-------------|
 | **CVE** | Common Vulnerabilities and Exposures: unique identifier for a known vulnerability. |
-| **CVSS** | Common Vulnerability Scoring System: 0–10 score measuring severity. |
+| **CVSS** | Common Vulnerability Scoring System: 0-10 score measuring severity. |
 | **NVD** | National Vulnerability Database: US government repository of CVE data. |
 | **Patch** | Fix released by the vendor to address a vulnerability. |
 | **Zero-Day** | Vulnerability exploited before a patch is available. |

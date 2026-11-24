@@ -2,7 +2,7 @@
 
 The **OSI (Open Systems Interconnection) model** is a 7-layer framework that standardizes how devices communicate over networks.
 
-Mnemonic (top → bottom): **All People Seem To Need Data Processing**  
+Mnemonic (top to bottom): **All People Seem To Need Data Processing**  
 (Application, Presentation, Session, Transport, Network, Data Link, Physical)
 
 ---
