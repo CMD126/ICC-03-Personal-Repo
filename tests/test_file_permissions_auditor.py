@@ -1,5 +1,6 @@
 import os
 import stat
+import sys
 
 import pytest
 from conftest import load
@@ -33,6 +34,7 @@ def _make(path, mode):
     return str(path)
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="creating symlinks needs elevated rights on Windows")
 def test_world_writable_finds_files_and_ignores_symlinks(tmp_path):
     bad = _make(tmp_path / "open.txt", 0o666)
     _make(tmp_path / "ok.txt", 0o644)
