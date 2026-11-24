@@ -10,11 +10,16 @@ path characters.
 
 import shutil
 import subprocess
+import sys
 
 import pytest
 from conftest import ROOT
 
-pytestmark = pytest.mark.skipif(shutil.which("bash") is None, reason="bash not installed")
+pytestmark = [
+    pytest.mark.skipif(shutil.which("bash") is None, reason="bash not installed"),
+    # On Windows "bash" is often the WSL launcher, which cannot take Windows paths
+    pytest.mark.skipif(sys.platform == "win32", reason="bash on Windows (WSL) cannot source scripts by Windows path"),
+]
 
 NETDIAG = "tools/network-tool/net_diagnostic_tool.sh"
 NMATRIX = "tools/nmatrix/nmatrix_nmap_scanner.sh"
