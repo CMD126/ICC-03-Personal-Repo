@@ -18,7 +18,7 @@ A bash menu-driven frontend for `nmap` with a Matrix digital-rain intro animatio
 
 ## What changed in v2.0
 
-- **Animation fixed**: heads now advance *once per frame* (not inside the row loop), giving correct cascading rain. Variable column speeds (1–3 frame intervals) and a larger character set (`!#$%&*+/<=>?@[\]^{}|~0123456789ABCDEFabcdef`). Bright-green head, normal-green trail, dim-green fade at tail end.
+- **Animation fixed**: heads now advance *once per frame* (not inside the row loop), giving correct cascading rain. Variable column speeds (1-3 frame intervals) and a larger character set (`!#$%&*+/<=>?@[\]^{}|~0123456789ABCDEFabcdef`). Bright-green head, normal-green trail, dim-green fade at tail end.
 - **Animation runs once at startup**: no longer repeats before every menu.
 - **`sudo` only when not root**: if you run as root, `sudo` is skipped.
 - **Portable grep**: removed `-P` (Perl regex) flag; uses `-E` (extended) which works on GNU/BSD/macOS.

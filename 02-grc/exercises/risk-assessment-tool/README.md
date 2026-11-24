@@ -19,7 +19,7 @@ Hands-on exercise for understanding GRC risk management: building a risk registe
 
 | # | Option | Description |
 |---|--------|-------------|
-| 1 | Add Risk | Enter asset, threat, vulnerability, likelihood (1–5), and impact (1–5). Score is auto-calculated. |
+| 1 | Add Risk | Enter asset, threat, vulnerability, likelihood (1-5), and impact (1-5). Score is auto-calculated. |
 | 2 | View Register | Table of all risks sorted by score (highest first) with severity and status |
 | 3 | View Risk Detail | Full breakdown of a single risk entry |
 | 4 | Risk Matrix | 5×5 scoring matrix with severity zones and response guidance |
@@ -51,7 +51,7 @@ Pure Python 3 stdlib: no external packages needed.
 
 | Score | Severity | Response |
 |-------|----------|---------|
-| 1–4 | Low | Accept: monitor periodically |
-| 5–9 | Medium | Mitigate within 90 days |
-| 10–14 | High | Mitigate within 30 days |
-| 15–25 | Critical | Immediate escalation required |
+| 1-4 | Low | Accept: monitor periodically |
+| 5-9 | Medium | Mitigate within 90 days |
+| 10-14 | High | Mitigate within 30 days |
+| 15-25 | Critical | Immediate escalation required |

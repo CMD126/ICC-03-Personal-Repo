@@ -9,7 +9,7 @@ A menu-driven Python utility for hash identification, generation, comparison, an
 | # | Option | Description |
 |---|--------|-------------|
 | 1 | **Identify Hash Type** | Detects hash algorithm by format and length: supports MD5, SHA family, SHA3, BLAKE2b, bcrypt, Argon2, NTLM, MySQL, LDAP, and more |
-| 2 | **Generate Hash** | Hashes any string with 9 algorithms (MD5 → SHA3-512 → BLAKE2b); optional salt support |
+| 2 | **Generate Hash** | Hashes any string with 9 algorithms (from MD5 to SHA3-512 and BLAKE2b); optional salt support |
 | 3 | **File Integrity Checker** | Generate all checksums for a file, or verify a file against a known hash: uses `hmac.compare_digest` to prevent timing attacks |
 | 4 | **Compare Two Hashes** | Constant-time hash comparison with mismatch character count |
 | 5 | **Hash a File** | Hash any file with a chosen algorithm; shows file size and computation time |

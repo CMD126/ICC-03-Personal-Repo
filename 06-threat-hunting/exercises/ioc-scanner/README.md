@@ -10,7 +10,7 @@ Hands-on exercise for understanding Indicators of Compromise (IOCs), threat inte
 - The Pyramid of Pain: why TTPs are more valuable than hash IOCs
 - How threat intelligence feeds work
 - How to scan log files for signs of compromise
-- The threat hunting methodology: Hypothesis → Collect → Investigate → Discover → Report
+- The threat hunting methodology: Hypothesis, Collect, Investigate, Discover, Report
 
 ---
 

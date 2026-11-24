@@ -1,6 +1,6 @@
 # Nmap Command Cheat Sheet
 
-A comprehensive Nmap reference grouped by purpose. Use responsibly and only on systems you own or have explicit authorization to test.
+An Nmap reference grouped by purpose. Use responsibly and only on systems you own or have explicit authorization to test.
 
 ---
 
@@ -48,7 +48,7 @@ A comprehensive Nmap reference grouped by purpose. Use responsibly and only on s
 |------|-------------|
 | `-p 22,80,443` | Specific ports. |
 | `-p 1-1024` | Port range. |
-| `-p-` | All ports (1–65535). |
+| `-p-` | All ports (1-65535). |
 | `--top-ports 100` | Scan the top N most common ports. |
 | `--exclude 192.168.1.5` | Exclude specific host(s). |
 | `--excludefile exclude.txt` | Exclude hosts listed in a file. |
@@ -104,7 +104,7 @@ A comprehensive Nmap reference grouped by purpose. Use responsibly and only on s
 
 | Flag | Description |
 |------|-------------|
-| `-T0` … `-T5` | Timing templates (0 = slowest/stealthiest, 5 = fastest/noisiest). |
+| `-T0` to `-T5` | Timing templates (0 = slowest/stealthiest, 5 = fastest/noisiest). |
 | `nmap -T4 -p- target.com` | Faster full-port scan (no extreme stealth). |
 | `--max-retries 2` | Reduce retransmissions to speed up scan. |
 | `--host-timeout 30m` | Set timeout for hosts. |
