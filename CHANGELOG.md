@@ -10,6 +10,7 @@ All notable changes to this repository are documented here.
 - README banner and a terminal demo (`docs/demo.svg`) rendered from real runs of the log analyzer and the IAM policy analyzer on their bundled sample data.
 
 ### Fixed
+- The Python tools crashed with `UnicodeEncodeError` on Windows consoles that use the cp1252 code page when they printed their box-drawing banner. Each tool now switches stdout to UTF-8 before it prints.
 - `log-analyzer` option 1 failed with "File not found" because `sample_auth.log` was documented but never committed: the `*.log` ignore rule hid it. A synthetic sample (documentation IP ranges) is now tracked.
 - `subnet-calculator` hung on large networks (`10.0.0.0/8`, `0.0.0.0/0`) because it listed every host to find the first and last one
 - `file-permissions-auditor` did not show SUID, SGID and sticky bits (`4755` printed as `rwxr-xr-x`) and reported every symlink as world-writable

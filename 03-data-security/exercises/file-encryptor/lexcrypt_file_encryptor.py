@@ -2,6 +2,7 @@
 import base64
 import os
 import struct
+import sys
 import tempfile
 import threading
 import tkinter as tk
@@ -411,6 +412,8 @@ class CryptoApp:
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
+    if hasattr(sys.stdout, "reconfigure"):  # Windows consoles default to cp1252
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     root = tk.Tk()
     app = CryptoApp(root)
     root.mainloop()
