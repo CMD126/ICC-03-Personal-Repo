@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="955" height="767" viewBox="0 0 955 767" role="img" aria-label="Terminal session running the log analyzer and the IAM policy analyzer">
+<rect width="955" height="767" rx="8" fill="#0d1117"/>
+<rect width="955" height="30" rx="8" fill="#161b22"/>
+<rect y="22" width="955" height="8" fill="#161b22"/>
+<circle cx="18" cy="15" r="6" fill="#ff5f56"/>
+<circle cx="38" cy="15" r="6" fill="#ffbd2e"/>
+<circle cx="58" cy="15" r="6" fill="#27c93f"/>
+<text x="477.5" y="20" fill="#8b949e" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">icc-03 tools</text>
+<text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="14" fill="#c9d1d9" xml:space="preserve">
+<tspan x="18" y="60"><tspan fill="#7ee787">$ </tspan><tspan fill="#c9d1d9" font-weight="bold">python3 04-security-operations/exercises/log-analyzer/log_analyzer.py   # option 1: bundled sample</tspan></tspan>
+<tspan x="18" y="79">  [SUMMARY]</tspan>
+<tspan x="18" y="98">    Total failed login attempts  : 14</tspan>
+<tspan x="18" y="117">    Unique source IPs (failed)   : 3</tspan>
+<tspan x="18" y="136">    Successful logins            : 3</tspan>
+<tspan x="18" y="155">    Unique invalid usernames     : 4</tspan>
+<tspan x="18" y="174">    Brute force alerts           : 1</tspan>
+<tspan x="18" y="193"><tspan fill="#f85149"></tspan></tspan>
+<tspan x="18" y="212">  ──────────────────────────────────────────────────────────</tspan>
+<tspan x="18" y="231">  [!] BRUTE FORCE ALERTS  (threshold: &gt;= 5 failures)</tspan>
+<tspan x="18" y="250"><tspan fill="#f85149"></tspan></tspan>
+<tspan x="18" y="269">    IP Address           Attempts   Targeted Accounts</tspan>
+<tspan x="18" y="288">    ──────────────────────────────────────────────────</tspan>
+<tspan x="18" y="307">    203.0.113.45         9          admin, root, ubuntu</tspan>
+<tspan x="18" y="326"><tspan fill="#f85149"></tspan></tspan>
+<tspan x="18" y="345">  ──────────────────────────────────────────────────────────</tspan>
+<tspan x="18" y="364">  [+] SUCCESSFUL LOGINS (3)</tspan>
+<tspan x="18" y="383"><tspan fill="#f85149"></tspan></tspan>
+<tspan x="18" y="402">    Timestamp                User            Source IP</tspan>
+<tspan x="18" y="421">    ──────────────────────────────────────────────────</tspan>
+<tspan x="18" y="440">    Nov 24 03:13:20          admin           203.0.113.45</tspan>
+<tspan x="18" y="459">    Nov 24 08:02:11          alice           192.0.2.10</tspan>
+<tspan x="18" y="478">    Nov 24 09:15:40          bob             192.0.2.22</tspan>
+<tspan x="18" y="497"><tspan fill="#f85149"></tspan></tspan>
+<tspan x="18" y="516">  ──────────────────────────────────────────────────────────</tspan>
+<tspan x="18" y="535"><tspan fill="#f85149"></tspan></tspan>
+<tspan x="18" y="554"><tspan fill="#7ee787">$ </tspan><tspan fill="#c9d1d9" font-weight="bold">python3 05-cloud-security/exercises/iam-policy-analyzer/iam_policy_analyzer.py   # option 1: bundled sample</tspan></tspan>
+<tspan x="18" y="573">  Statement #1: AdminAccess</tspan>
+<tspan x="18" y="592">  Effect    : Allow</tspan>
+<tspan x="18" y="611">  Principal : *</tspan>
+<tspan x="18" y="630">  Actions   : *</tspan>
+<tspan x="18" y="649">  Resource  : *</tspan>
+<tspan x="18" y="668">  Findings  :</tspan>
+<tspan x="18" y="687">    [!!] CRITICAL: Principal is &#x27;*&#x27; — allows ANY entity (public access)</tspan>
+<tspan x="18" y="706">    [! ] HIGH: Resource is &#x27;*&#x27; — applies to ALL resources in account</tspan>
+<tspan x="18" y="725">    [!!] CRITICAL: Action &#x27;*&#x27;: Full access to ALL services</tspan>
+<tspan x="18" y="744">  ─────────────────────────────────────────────────────────────────</tspan>
+</text>
+</svg>
