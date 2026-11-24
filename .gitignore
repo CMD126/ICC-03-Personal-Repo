@@ -35,6 +35,7 @@ config.ini
 *.dump
 # Logs and debug
 *.log
+!**/sample_auth.log
 debug/
 logs/
 # Temp and backup files

@@ -6,7 +6,11 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added
+- README banner and a terminal demo (`docs/demo.svg`) rendered from real runs of the log analyzer and the IAM policy analyzer on their bundled sample data.
+
 ### Fixed
+- `log-analyzer` option 1 failed with "File not found" because `sample_auth.log` was documented but never committed: the `*.log` ignore rule hid it. A synthetic sample (documentation IP ranges) is now tracked.
 - `subnet-calculator` hung on large networks (`10.0.0.0/8`, `0.0.0.0/0`) because it listed every host to find the first and last one
 - `file-permissions-auditor` did not show SUID, SGID and sticky bits (`4755` printed as `rwxr-xr-x`) and reported every symlink as world-writable
 - `file-encryptor` truncated the source file when the save dialog pointed back at it, and left half-written output after a wrong password. Output is now written to a temporary file and moved into place at the end

@@ -1,0 +1,37 @@
+$ python3 04-security-operations/exercises/log-analyzer/log_analyzer.py   # option 1: bundled sample
+  [SUMMARY]
+    Total failed login attempts  : 14
+    Unique source IPs (failed)   : 3
+    Successful logins            : 3
+    Unique invalid usernames     : 4
+    Brute force alerts           : 1
+
+  ──────────────────────────────────────────────────────────
+  [!] BRUTE FORCE ALERTS  (threshold: >= 5 failures)
+
+    IP Address           Attempts   Targeted Accounts
+    ──────────────────────────────────────────────────
+    203.0.113.45         9          admin, root, ubuntu
+
+  ──────────────────────────────────────────────────────────
+  [+] SUCCESSFUL LOGINS (3)
+
+    Timestamp                User            Source IP
+    ──────────────────────────────────────────────────
+    Nov 24 03:13:20          admin           203.0.113.45
+    Nov 24 08:02:11          alice           192.0.2.10
+    Nov 24 09:15:40          bob             192.0.2.22
+
+  ──────────────────────────────────────────────────────────
+
+$ python3 05-cloud-security/exercises/iam-policy-analyzer/iam_policy_analyzer.py   # option 1: bundled sample
+  Statement #1: AdminAccess
+  Effect    : Allow
+  Principal : *
+  Actions   : *
+  Resource  : *
+  Findings  :
+    [!!] CRITICAL: Principal is '*' — allows ANY entity (public access)
+    [! ] HIGH: Resource is '*' — applies to ALL resources in account
+    [!!] CRITICAL: Action '*': Full access to ALL services
+  ─────────────────────────────────────────────────────────────────
