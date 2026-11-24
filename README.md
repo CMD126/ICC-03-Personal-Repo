@@ -116,7 +116,6 @@ CI also runs `shellcheck -S error` on every `*.sh` file and checks Markdown link
 
 - These are educational tools, not production software.
 - Tests cover the logic listed above (log parsing, IOC matching, IAM findings, risk scoring, header grading, hash identification, subnetting, password cracking, file permission checks, file encryption, the port scanner, Bash input validation and the ransomware simulator). `abdns` and `message_encryptor.py` have no automated tests.
-- On a Windows console that uses the cp1252 code page, a Python tool that prints its box-drawing banner (for example `risk_assessment_tool.py`) fails with `UnicodeEncodeError`. Set `PYTHONUTF8=1` first.
 - The Bash tools are written for Linux. Some of them also call external programs such as Nmap.
 - The ransomware simulator should only ever run inside an isolated, snapshotted VM.
 
