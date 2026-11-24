@@ -22,6 +22,7 @@ All notable changes to this repository are documented here.
 
 ### Added
 - Tests for the port scanner, subnet calculator, password auditor, file permissions auditor, file encryptor, ransomware simulator sandbox and the Bash tools' input validation (193 tests in total)
+- Tests for the pure logic of `abdns` (packet building, averaging, ranking) and `message_encryptor.py` (encrypt/decrypt roundtrip); the Bash input validation tests and one symlink test are skipped on Windows
 - CI installs `cryptography` and `Pillow` so the encryption tests run there
 
 ### Planned

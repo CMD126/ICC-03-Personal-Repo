@@ -115,7 +115,7 @@ CI also runs `shellcheck -S error` on every `*.sh` file and checks Markdown link
 ## Limits of this version
 
 - These are educational tools, not production software.
-- Tests cover the logic listed above (log parsing, IOC matching, IAM findings, risk scoring, header grading, hash identification, subnetting, password cracking, file permission checks, file encryption, the port scanner, Bash input validation and the ransomware simulator). `abdns` and `message_encryptor.py` have no automated tests.
+- Tests cover the logic listed above (log parsing, IOC matching, IAM findings, risk scoring, header grading, hash identification, subnetting, password cracking, file permission checks, file encryption, the port scanner, Bash input validation, the ransomware simulator, and the pure logic of `abdns` and `message_encryptor.py`). Real DNS queries and applying DNS settings in `abdns` are not tested. On Windows the Bash input validation tests and one symlink test are skipped.
 - The Bash tools are written for Linux. Some of them also call external programs such as Nmap.
 - The ransomware simulator should only ever run inside an isolated, snapshotted VM.
 
