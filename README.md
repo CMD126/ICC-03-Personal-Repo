@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/banner.svg" alt="ICC-03 Cybersecurity Portfolio" width="100%">
+</p>
+
 # ICC-03 Cybersecurity Portfolio
 
 [![CI](https://github.com/CMD126/ICC-03-Personal-Repo/actions/workflows/ci.yml/badge.svg)](https://github.com/CMD126/ICC-03-Personal-Repo/actions/workflows/ci.yml)
@@ -17,6 +21,12 @@
 I built this repository while going through the ICC-03 cybersecurity program. It started as a place to keep my notes, and over time it turned into a set of working tools I wrote myself to understand how things actually work: how a port scanner talks to a socket, how you spot a brute force attack in `auth.log`, why an IAM policy with `"Resource": "*"` should make you nervous.
 
 Everything here runs. The Python code is linted and tested on every push, and the Bash scripts go through ShellCheck. If you work in security, you should be able to pick any tool, read the README next to it, and use it in a lab within a couple of minutes.
+
+**Demo**
+
+![Terminal session: the log analyzer flags an SSH brute force source and a successful login from it, then the IAM policy analyzer flags a public wildcard admin statement](docs/demo.svg)
+
+Real output of two of the tools on the sample data that ships with them. Regenerate it with `docs/render_svg.py`.
 
 **Contents**
 
