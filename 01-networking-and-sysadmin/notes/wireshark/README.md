@@ -21,8 +21,8 @@ Here are some useful filters and shortcuts.
 | `arp` | Show only ARP traffic. |
 | `icmp` | Show only ICMP packets (ping, traceroute). |
 | `tls` | Show TLS/SSL (HTTPS) traffic. (`ssl` also works in older Wireshark versions.) |
-| `tcp contains "login"` | Show TCP packets containing the string “login”. |
-| `frame contains "password"` | Show packets containing the string “password”. |
+| `tcp contains "login"` | Show TCP packets containing the string "login". |
+| `frame contains "password"` | Show packets containing the string "password". |
 
 ---
 
@@ -40,7 +40,7 @@ Here are some useful filters and shortcuts.
 | `icmp` | Capture only ICMP packets. |
 | `src host 10.0.0.5` | Capture only traffic from a specific source. |
 | `dst host 8.8.8.8` | Capture only traffic destined for a specific host. |
-| `tcp portrange 1-1024` | Capture TCP traffic on ports 1–1024. |
+| `tcp portrange 1-1024` | Capture TCP traffic on ports 1-1024. |
 | `not arp` | Capture everything except ARP packets. |
 
 ---
@@ -66,7 +66,7 @@ Here are some useful filters and shortcuts.
 
 - Use **display filters** for analysis after capture; use **capture filters** to limit what gets captured.  
 - Combine filters, e.g. `ip.addr==192.168.1.1 && tcp.port==443`.  
-- Export only relevant packets: *File → Export Specified Packets*.  
+- Export only relevant packets: *File > Export Specified Packets*.  
 - For encrypted traffic (TLS/SSL), Wireshark can decrypt if you import the right keys.  
 
 ---

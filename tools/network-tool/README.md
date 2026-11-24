@@ -1,6 +1,6 @@
 # Net Diagnostic Tool: v4.0
 
-A comprehensive Bash-based network diagnostic, security analysis, and monitoring tool with an interactive categorized menu. Runs on any Linux system with standard iproute2 tools.
+A Bash network diagnostic, security analysis and monitoring tool with an interactive categorized menu. Runs on any Linux system with standard iproute2 tools.
 
 ---
 
