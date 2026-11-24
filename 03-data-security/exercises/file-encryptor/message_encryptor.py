@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 from __future__ import annotations
 
+import sys
+
 from cryptography.fernet import Fernet, InvalidToken
 
 # ---------------------------------------------------------------------------
@@ -75,4 +77,6 @@ def main():
 
 
 if __name__ == "__main__":
+    if hasattr(sys.stdout, "reconfigure"):  # Windows consoles default to cp1252
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     main()

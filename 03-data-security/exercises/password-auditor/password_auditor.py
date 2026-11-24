@@ -12,6 +12,7 @@ Demonstrates:
 
 import hashlib
 import os
+import sys
 import time
 
 BANNER = """
@@ -182,4 +183,6 @@ def main():
 
 
 if __name__ == "__main__":
+    if hasattr(sys.stdout, "reconfigure"):  # Windows consoles default to cp1252
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     main()
